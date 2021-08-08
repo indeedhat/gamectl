@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test Thing</title>
+
+        <link rel="stylesheet" href="/assets/public.css" />
+    </head>
+    <body>
+        Hello, {{ .world }}
+        <h2>Counter</h2>
+        <ul>
+            {{ range .counter }}
+                <li>{{ . }}</li>
+            {{ end }}
+        </ul>
+    </body>
+</html>

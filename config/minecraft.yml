@@ -1,0 +1,9 @@
+title: "Minecraft server"
+description: ""
+icon: ""
+commands:
+    status: ""
+    start: ""
+    stop: ""
+files:
+    - some/config/file.cfg
