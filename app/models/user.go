@@ -1,6 +1,10 @@
 package models
 
-import "time"
+import (
+	"time"
+
+	"golang.org/x/crypto/bcrypt"
+)
 
 // User model
 type User struct {
@@ -58,4 +62,21 @@ func DeleteUser(user *User) error {
 	tx := DB.Delete(user)
 
 	return tx.Error
+}
+
+// LoadUserByLoginDetails will check off the given user/pass and attempt to load a valid user
+// from them
+func LoadUserByLoginDetails(username, passwd string) *User {
+	var user User
+
+	tx := DB.Where("username = ?", username).First(&user)
+	if tx.Error != nil {
+		return nil
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(passwd)); err != nil {
+		return nil
+	}
+
+	return &user
 }
