@@ -93,6 +93,6 @@ func LoadAppConfig() (*[]App, error) {
 // runCommand runs a command
 // ...
 // Who knew
-func runCommand(cmd string) ([]bytes, error) {
-
+func runCommand(cmd string) ([]byte, error) {
+	return []byte{}, nil
 }
