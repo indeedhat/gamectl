@@ -1,0 +1,11 @@
+{
+    "online": false,
+    "players": 0,
+    "uptime": 0,
+    "extra": [
+        {
+            "name": "World Name",
+            "value": "Somehing"
+        }
+    ]
+}
