@@ -21,7 +21,9 @@ func LoginController(ctx *gin.Context) {
 
 	err := ctx.Bind(&input)
 	if err != nil {
-		errorMessage = "Bad input"
+		if input.Username != "" && input.Passwd != "" {
+			errorMessage = "Bad input"
+		}
 	} else {
 		user := models.LoadUserByLoginDetails(input.Username, input.Passwd)
 		if user == nil {

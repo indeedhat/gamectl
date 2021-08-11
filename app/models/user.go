@@ -69,7 +69,7 @@ func DeleteUser(user *User) error {
 func LoadUserByLoginDetails(username, passwd string) *User {
 	var user User
 
-	tx := DB.Where("username = ?", username).First(&user)
+	tx := DB.Where("name = ?", username).First(&user)
 	if tx.Error != nil {
 		return nil
 	}

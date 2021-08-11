@@ -15,7 +15,7 @@ func IsLoggedIn(ctx *gin.Context) {
 	ses := sessions.Default(ctx)
 
 	userId := ses.Get("ID")
-	if userId == 0 {
+	if userId == "0" || userId == nil {
 		ctx.Redirect(http.StatusFound, "/login")
 		return
 	}
@@ -38,7 +38,7 @@ func IsGuest(ctx *gin.Context) {
 	ses := sessions.Default(ctx)
 
 	userId := ses.Get("ID")
-	if userId != 0 {
+	if userId != 0 && userId != nil {
 		user := models.FindUser(userId.(string))
 		if user != nil {
 			ctx.Redirect(http.StatusFound, "/")

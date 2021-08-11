@@ -4,9 +4,9 @@ clean:
 
 .PHONY: build
 build:
-	CGO_ENABLED=0 go build .
+	go build .
 
 
 .PHONY: run
 run:
-	CGO_ENABLED=0 go run .
+	go run .
