@@ -37,6 +37,7 @@ func BuildRoutes() *gin.Engine {
 	{
 		private.GET("/", controllers.IndexController)
 		private.GET("/logout", controllers.LogoutController)
+		private.GET("/users", controllers.ListUsersController)
 
 		private.GET("/api/apps/:app_key", api.GetAppStatusController)
 		private.POST("/api/apps/:app_key/start", api.StartAppController)
@@ -73,6 +74,13 @@ func setupTemplateFunctions(router *gin.Engine) {
 			}
 
 			return string(bytes)
+		},
+		"fallback": func(prefered, fallback string) string {
+			if prefered != "" {
+				return prefered
+			}
+
+			return fallback
 		},
 	})
 }

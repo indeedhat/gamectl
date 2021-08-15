@@ -29,6 +29,18 @@ func FindUser(id string) *User {
 	return &user
 }
 
+// ListUsers will return all the users
+func ListUsers() *[]User {
+	var users []User
+
+	tx := DB.Find(&users)
+	if tx.Error != nil {
+		return nil
+	}
+
+	return &users
+}
+
 // CreateUser is a simple helper function for adding a standard user to the database
 func CreateUser(name, password string) *User {
 	hash, err := hashPassword(password)

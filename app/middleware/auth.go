@@ -37,6 +37,31 @@ func IsLoggedIn(ctx *gin.Context) {
 	ctx.Next()
 }
 
+// IsRoot checks that the user is actually a root user
+func IsRoot(ctx *gin.Context) {
+	user, exists := ctx.Get("user")
+	if !exists {
+		ctx.Redirect(http.StatusFound, "/login")
+		ctx.AbortWithStatus(http.StatusFound)
+		return
+	}
+
+	userObject, ok := user.(*models.User)
+	if !ok {
+		ctx.Redirect(http.StatusFound, "/login")
+		ctx.AbortWithStatus(http.StatusFound)
+		return
+	}
+
+	if !userObject.Root {
+		ctx.Redirect(http.StatusFound, "/users")
+		ctx.AbortWithStatus(http.StatusFound)
+		return
+	}
+
+	ctx.Next()
+}
+
 // IsGues check that the user is not logged in
 //
 // User will be redirected to the panel if not
