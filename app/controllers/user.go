@@ -40,7 +40,7 @@ func LoginController(ctx *gin.Context) {
 		}
 	}
 
-	ctx.HTML(http.StatusOK, "pages/login.html", gin.H{
+	view(ctx, "pages/login.html", gin.H{
 		"input": input,
 		"error": errorMessage,
 	})
