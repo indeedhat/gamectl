@@ -28,6 +28,7 @@ type App struct {
 	Title       string
 	Description string
 	Icon        string
+	MaxPlayers  string `yaml:"maxPlayers"`
 
 	Commands struct {
 		Status string
