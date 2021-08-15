@@ -4,11 +4,16 @@
     <div class="bodyTitle">> Main Controls</div>
     <div class="body">
         {{ range $key, $app := .apps }}
-        <div class="serverStatus" data-key="{{ $key }}" data-config="{{ json $app.Files }}">
+            <div 
+                class="serverStatus" 
+                data-key="{{ $key }}" 
+                data-config="{{ json $app.FileKeys }}"
+            >
                 <div class="serverTitle">> {{ $app.Title }}</div>
                 <div class="dataTile Status">Status  :  Online</div>
                 <div class="dataTile players">Players :  0/0</div>
                 <div class="dataTile uptime">Uptime  :  0s</div>
+
                 <div class="controls">
                     <div class="controller startStop">Stop</div>
                     <div class="controller restart">Restart</div>

@@ -3,10 +3,11 @@ package config
 import (
 	"encoding/json"
 	"io/ioutil"
+	"os"
+	"os/exec"
 	"path"
 	"path/filepath"
 	"strings"
-	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -17,9 +18,9 @@ var appCache map[string]App
 
 // AppStatus
 type AppStatus struct {
-	Running   bool
-	UserCount uint8
-	StartTime time.Time
+	Online    bool  `json:"online"`
+	UserCount uint8 `json:"users"`
+	Uptime    uint  `json:"uptime"`
 }
 
 // App configuration
@@ -54,7 +55,7 @@ func (app App) Stop() error {
 // Status gives the current status of the application
 func (app App) Status() (*AppStatus, error) {
 	var status AppStatus
-	data, err := runCommand(app.Commands.Start)
+	data, err := runCommand(app.Commands.Status)
 
 	if err != nil {
 		return nil, err
@@ -65,6 +66,17 @@ func (app App) Status() (*AppStatus, error) {
 	}
 
 	return &status, nil
+}
+
+// FileKeys will return the keys for any config files defined on the application
+func (app App) FileKeys() []string {
+	var keys []string
+
+	for key := range app.Files {
+		keys = append(keys, key)
+	}
+
+	return keys
 }
 
 // Apps will get apps from cache
@@ -128,6 +140,14 @@ func appKey(file string) string {
 // runCommand runs a command
 // ...
 // Who knew
-func runCommand(cmd string) ([]byte, error) {
-	return []byte{}, nil
+func runCommand(cmdString string) ([]byte, error) {
+	var err error
+
+	cmd := exec.Command(cmdString)
+
+	if cmd.Dir, err = os.Getwd(); err != nil {
+		return []byte{}, err
+	}
+
+	return cmd.Output()
 }

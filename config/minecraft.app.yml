@@ -1,9 +1,9 @@
 title: "Minecraft server"
 description: ""
-icon: ""
+icon: ".examples/minecraft/icon.jpg"
 commands:
-    status: ""
-    start: ""
-    stop: ""
+    status: ".examples/minecraft/status.sh"
+    start: ".examples/minecraft/start.sh"
+    stop: ".examples/minecraft/stop.sh"
 files:
     something: some/config/file.cfg

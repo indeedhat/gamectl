@@ -9,4 +9,5 @@ build:
 
 .PHONY: run
 run:
-	go run .
+	go build .
+	./command-center
