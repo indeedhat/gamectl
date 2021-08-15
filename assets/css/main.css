@@ -48,6 +48,12 @@ div.serverStatus{
     padding:5px;
 }
 
+div.dataContainer{
+    width:70%;
+    height:4em;
+    float:left;
+    padding-left:5px;
+}
 div.serverTitle{
     font-size:12px;
     color:rgb(255,255,255);
@@ -58,11 +64,12 @@ div.serverTitle{
 }
 
 div.dataTile{
-    width:100%;
+    width:50%;
     float:left;
     height:20px;
     color:rgb(255,255,255);
 }
+
 
 div.controls{
     width:100%;
@@ -78,5 +85,10 @@ div.controller{
     border-width:2px;
     border-color:rgba(0, 0, 0,0.9);   
     width:100%;
+    float:left;
+}
+
+img.icon{
+    width:30%;
     float:left;
 }
