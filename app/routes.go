@@ -1,6 +1,8 @@
 package app
 
 import (
+	"encoding/json"
+	"html/template"
 	"os"
 
 	"github.com/gin-contrib/sessions"
@@ -21,6 +23,7 @@ var (
 func BuildRoutes() *gin.Engine {
 	router := gin.Default()
 
+	setupTemplateFunctions(router)
 	setupStatics(router)
 	setupSessions(router)
 
@@ -59,4 +62,17 @@ func setupSessions(router *gin.Engine) {
 	sessionStore = memstore.NewStore([]byte(os.Getenv("SESSION_SECRET")))
 
 	router.Use(sessions.Sessions("session", sessionStore))
+}
+
+func setupTemplateFunctions(router *gin.Engine) {
+	router.SetFuncMap(template.FuncMap{
+		"json": func(data interface{}) string {
+			bytes, err := json.Marshal(data)
+			if err != nil {
+				return ""
+			}
+
+			return string(bytes)
+		},
+	})
 }

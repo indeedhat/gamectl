@@ -3,16 +3,16 @@
 
     <div class="bodyTitle">> Main Controls</div>
     <div class="body">
-        {{ range .apps }}
-            <div class="serverStatus">
-                <div class="serverTitle">> {{ .Title }}</div>
-                <div class="dataTile" id="Status">Status  :  Online</div>
-                <div class="dataTile" id="players">Players :  0/0</div>
-                <div class="dataTile" id="uptime">Uptime  :  0s</div>
+        {{ range $key, $app := .apps }}
+        <div class="serverStatus" data-key="{{ $key }}" data-config="{{ json $app.Files }}">
+                <div class="serverTitle">> {{ $app.Title }}</div>
+                <div class="dataTile Status">Status  :  Online</div>
+                <div class="dataTile players">Players :  0/0</div>
+                <div class="dataTile uptime">Uptime  :  0s</div>
                 <div class="controls">
-                    <div class="controller" id="startStop">Stop</div>
-                    <div class="controller" id="restart">Restart</div>
-                    <div class="controller" id="config">Config</div>
+                    <div class="controller startStop">Stop</div>
+                    <div class="controller restart">Restart</div>
+                    <div class="controller config">Config</div>
                 </div>
             </div>
         {{ end }}
