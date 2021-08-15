@@ -1,0 +1,36 @@
+{{ define "partials/header.html" }}
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>Test Thing</title>
+
+            <link rel="stylesheet" href="/assets/css/header.css" />
+            <link rel="stylesheet" href="/assets/css/main.css" />
+        </head>
+        <body>
+            <header>
+                <div class="title">
+                    > Game Controller v.01a - idatgaming 
+                </div>
+
+                    <nav>
+                        <ul>
+                            {{ if .user }}
+                                <li>
+                                    <strong>{{ .user.Name }}</strong>
+                                </li>
+                                <li>
+                                    <a href="/logout">Logout</a>
+                                </li>
+                            {{ else }}
+                                <li>
+                                    <strong>Guest</strong>
+                                </li>
+                            {{ end }}
+                        </ul>
+                    </nav>
+            </header>
+
+            <main>
+{{ end }}

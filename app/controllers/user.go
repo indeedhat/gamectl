@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"net/http"
+	"strconv"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
@@ -30,14 +31,16 @@ func LoginController(ctx *gin.Context) {
 			errorMessage = "Bad login details"
 		} else {
 			ses := sessions.Default(ctx)
-			ses.Set("ID", user.ID)
+			ses.Set("ID", strconv.Itoa(int(user.ID)))
+			ses.Save()
 
 			ctx.Redirect(http.StatusFound, "/")
+			ctx.AbortWithStatus(http.StatusFound)
 			return
 		}
 	}
 
-	ctx.HTML(http.StatusOK, "login.tmpl", gin.H{
+	ctx.HTML(http.StatusOK, "pages/login.html", gin.H{
 		"input": input,
 		"error": errorMessage,
 	})
@@ -48,6 +51,7 @@ func LogoutController(ctx *gin.Context) {
 	ses := sessions.Default(ctx)
 
 	ses.Delete("ID")
+	ses.Save()
 
 	ctx.Redirect(http.StatusFound, "/login")
 }

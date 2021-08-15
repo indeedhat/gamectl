@@ -12,6 +12,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var (
+	sessionStore memstore.Store
+)
+
 // BuildRoutes will setup the gin router for handling web requests along with
 // setting up static fs bindings for serving assets
 func BuildRoutes() *gin.Engine {
@@ -19,8 +23,6 @@ func BuildRoutes() *gin.Engine {
 
 	setupStatics(router)
 	setupSessions(router)
-
-	router.GET("/", controllers.IndexController)
 
 	public := router.Group("/", middleware.IsGuest)
 	{
@@ -30,6 +32,7 @@ func BuildRoutes() *gin.Engine {
 
 	private := router.Group("/", middleware.IsLoggedIn)
 	{
+		private.GET("/", controllers.IndexController)
 		private.GET("/logout", controllers.LogoutController)
 
 		private.GET("/api/apps/:app_key", api.GetAppStatusController)
@@ -48,12 +51,12 @@ func BuildRoutes() *gin.Engine {
 // along with assign the templating engines its views directory
 func setupStatics(router *gin.Engine) {
 	router.Static("/assets", "./assets")
-	router.LoadHTMLGlob("./views/*")
+	router.LoadHTMLGlob("./views/**/*")
 }
 
 // setupSessions for use with gin for user sessions etc
 func setupSessions(router *gin.Engine) {
-	store := memstore.NewStore([]byte(os.Getenv("SESSION_SECRET")))
+	sessionStore = memstore.NewStore([]byte(os.Getenv("SESSION_SECRET")))
 
-	router.Use(sessions.Sessions("session", store))
+	router.Use(sessions.Sessions("session", sessionStore))
 }

@@ -23,28 +23,21 @@ div.body{
     border-style: solid;
     border-width:2px;
     border-color:rgba(0, 0, 0,0.9);    
-    }
+}
+
 div.bodyTitle{
 
-        width:70%;
-        min-width:20em;
-        background-color: rgba(0,0,0,1);
-        margin:auto;
-        margin-top: 35vh;
-        padding:2px;
-        /* border-radius: 10px; */   
-        font-size:12px;
-        color:rgb(255,255,255);
-    }
-
-div.titleBar{
+    width:70%;
+    min-width:20em;
+    background-color: rgba(0,0,0,1);
+    margin:auto;
+    margin-top: 35vh;
+    padding:5px 10px;
+    /* border-radius: 10px; */   
     font-size:12px;
     color:rgb(255,255,255);
-    background-color:rgba(0,0,0,1);
-    width:100%;
-    height:auto;
-    padding:2px;
 }
+
 
 div.serverStatus{
     background-color:rgba(12,12,12,0.7);
@@ -63,7 +56,7 @@ div.serverTitle{
     background-color:rgba(0,0,0,1);
     width:100%;
     height:auto;
-    padding:2px;
+    padding:5px 10px;
 }
 
 div.dataTile{

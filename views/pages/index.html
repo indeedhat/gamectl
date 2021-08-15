@@ -1,0 +1,22 @@
+{{ define "pages/index.html" }}
+    {{ template "partials/header.html" . }}
+
+    <div class="bodyTitle">> Main Controls</div>
+    <div class="body">
+        {{ range .apps }}
+            <div class="serverStatus">
+                <div class="serverTitle">> {{ .Title }}</div>
+                <div class="dataTile" id="Status">Status  :  Online</div>
+                <div class="dataTile" id="players">Players :  0/0</div>
+                <div class="dataTile" id="uptime">Uptime  :  0s</div>
+                <div class="controls">
+                    <div class="controller" id="startStop">Stop</div>
+                    <div class="controller" id="restart">Restart</div>
+                    <div class="controller" id="config">Config</div>
+                </div>
+            </div>
+        {{ end }}
+    </div>
+
+    {{ template "partials/footer.html" . }}
+{{ end }}

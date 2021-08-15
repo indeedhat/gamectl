@@ -21,11 +21,13 @@ func main() {
 		log.Fatalf("Failed to migrate schema: %s", err)
 	}
 
-	if err := config.Apps(); err != nil {
+	if err := config.ReloadAppConfig(); err != nil {
 		log.Fatalf("Failed to load app config: %s", err)
 	}
 
 	router := app.BuildRoutes()
 
-	router.Run()
+	if err := router.Run(); err != nil {
+		log.Fatalf("Run failed: %s", err)
+	}
 }
