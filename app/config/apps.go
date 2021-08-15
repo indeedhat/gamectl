@@ -13,7 +13,7 @@ import (
 
 const ConfigDirectoryPattern = "./config/*.app.yml"
 
-var appCache *map[string]App
+var appCache map[string]App
 
 // AppStatus
 type AppStatus struct {
@@ -75,12 +75,12 @@ func Apps() *map[string]App {
 		ReloadAppConfig()
 	}
 
-	return appCache
+	return &appCache
 }
 
 // ReloadAppConfig from the yaml files in the config directory
 func ReloadAppConfig() error {
-	appCache = new(map[string]App)
+	appCache = make(map[string]App)
 
 	files, err := filepath.Glob(ConfigDirectoryPattern)
 	if err != nil {
@@ -99,7 +99,7 @@ func ReloadAppConfig() error {
 			return err
 		}
 
-		(*appCache)[appKey(file)] = app
+		appCache[appKey(file)] = app
 	}
 
 	return nil
