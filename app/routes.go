@@ -38,19 +38,25 @@ func BuildRoutes() *gin.Engine {
 		private.GET("/", controllers.IndexController)
 		private.GET("/logout", controllers.LogoutController)
 		private.GET("/users", controllers.ListUsersController)
+		private.GET("/users/passwd", controllers.UpdatePasswordController)
+		private.POST("/users/passwd", controllers.UpdatePasswordController)
 
 		private.GET("/api/apps/:app_key", api.GetAppStatusController)
 		private.POST("/api/apps/:app_key/start", api.StartAppController)
 		private.POST("/api/apps/:app_key/stop", api.StopAppController)
 		private.POST("/api/apps/:app_key/restart", api.RestartAppController)
 
-		private.GET("/ap/apps/:app_key/config/:config_key", api.LoadAppConfig)
-		private.POST("/ap/apps/:app_key/config/:config_key", api.SaveAppConfig)
+		private.GET("/api/apps/:app_key/config/:config_key", api.LoadAppConfig)
+		private.POST("/api/apps/:app_key/config/:config_key", api.SaveAppConfig)
 	}
 
 	rootAdmin := router.Group("/", middleware.IsLoggedIn, middleware.IsRoot)
 	{
 		rootAdmin.GET("/users/:user_id", controllers.UpdateUserController)
+		rootAdmin.POST("/users/:user_id", controllers.UpdateUserController)
+
+		rootAdmin.GET("/users/create", controllers.CreateUserController)
+		rootAdmin.POST("/users/create", controllers.CreateUserController)
 	}
 
 	return router
