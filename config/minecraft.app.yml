@@ -6,4 +6,4 @@ commands:
     start: ""
     stop: ""
 files:
-    - some/config/file.cfg
+    something: some/config/file.cfg

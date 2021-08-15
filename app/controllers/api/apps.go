@@ -8,17 +8,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var (
-	jsonSuccess = gin.H{"outcome": true}
-)
-
 // StartAppController will attempt to start an aplication on the server
 func StartAppController(ctx *gin.Context) {
 	appKey := ctx.Param("app_key")
-	apps := config.Apps()
 
-	app, ok := (*apps)[appKey]
-	if !ok {
+	app := config.GepApp(appKey)
+	if app == nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -34,10 +29,9 @@ func StartAppController(ctx *gin.Context) {
 // StopAppController will attempt to stop an applicaton on the server
 func StopAppController(ctx *gin.Context) {
 	appKey := ctx.Param("app_key")
-	apps := config.Apps()
 
-	app, ok := (*apps)[appKey]
-	if !ok {
+	app := config.GepApp(appKey)
+	if app == nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -55,10 +49,9 @@ func StopAppController(ctx *gin.Context) {
 // I the stop command fails because the app is already stopped then it will just run the start command
 func RestartAppController(ctx *gin.Context) {
 	appKey := ctx.Param("app_key")
-	apps := config.Apps()
 
-	app, ok := (*apps)[appKey]
-	if !ok {
+	app := config.GepApp(appKey)
+	if app == nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -77,10 +70,9 @@ func RestartAppController(ctx *gin.Context) {
 // GetAppStatusController will run the app status controller and return its json
 func GetAppStatusController(ctx *gin.Context) {
 	appKey := ctx.Param("app_key")
-	apps := config.Apps()
 
-	app, ok := (*apps)[appKey]
-	if !ok {
+	app := config.GepApp(appKey)
+	if app == nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}

@@ -34,7 +34,7 @@ type App struct {
 		Stop   string
 	}
 
-	Files []string
+	Files map[string]string
 }
 
 // Start the application
@@ -76,6 +76,17 @@ func Apps() *map[string]App {
 	}
 
 	return &appCache
+}
+
+// GetApp will get an app by its key
+func GepApp(key string) *App {
+	apps := Apps()
+	app, ok := (*apps)[key]
+	if !ok {
+		return nil
+	}
+
+	return &app
 }
 
 // ReloadAppConfig from the yaml files in the config directory
