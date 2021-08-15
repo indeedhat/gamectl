@@ -20,8 +20,15 @@
                         <ul>
                             {{ if .user }}
                                 <li>
-                                    <strong>{{ .user.Name }}</strong>
+                                    <a href="/users/passwd">
+                                        <strong>{{ .user.Name }}</strong>
+                                    </a>
                                 </li>
+                                {{ if user.Root }}
+                                    <li>
+                                        <a href="/users">Users</a>
+                                    </li>
+                                {{ end }}
                                 <li>
                                     <a href="/logout">Logout</a>
                                 </li>
