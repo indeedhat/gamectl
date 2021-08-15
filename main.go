@@ -21,6 +21,10 @@ func main() {
 		log.Fatalf("Failed to migrate schema: %s", err)
 	}
 
+	if err := config.Apps(); err != nil {
+		log.Fatalf("Failed to load app config: %s", err)
+	}
+
 	router := app.BuildRoutes()
 
 	router.Run()

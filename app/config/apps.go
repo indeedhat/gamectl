@@ -3,13 +3,17 @@ package config
 import (
 	"encoding/json"
 	"io/ioutil"
+	"path"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"gopkg.in/yaml.v3"
 )
 
 const ConfigDirectoryPattern = "./config/*.app.yml"
+
+var appCache *map[string]App
 
 // AppStatus
 type AppStatus struct {
@@ -63,13 +67,24 @@ func (app App) Status() (*AppStatus, error) {
 	return &status, nil
 }
 
-// LoadAppConfig from the yaml files in the config directory
-func LoadAppConfig() (*[]App, error) {
-	var apps []App
+// Apps will get apps from cache
+//
+// populating the cache when necesarry
+func Apps() *map[string]App {
+	if appCache == nil {
+		ReloadAppConfig()
+	}
+
+	return appCache
+}
+
+// ReloadAppConfig from the yaml files in the config directory
+func ReloadAppConfig() error {
+	appCache = new(map[string]App)
 
 	files, err := filepath.Glob(ConfigDirectoryPattern)
 	if err != nil {
-		return nil, err
+		return err
 	}
 
 	for _, file := range files {
@@ -77,17 +92,26 @@ func LoadAppConfig() (*[]App, error) {
 
 		data, err := ioutil.ReadFile(file)
 		if err != nil {
-			return nil, err
+			return err
 		}
 
 		if err = yaml.Unmarshal(data, &app); err != nil {
-			return nil, err
+			return err
 		}
 
-		apps = append(apps, app)
+		(*appCache)[appKey(file)] = app
 	}
 
-	return &apps, nil
+	return nil
+}
+
+func appKey(file string) string {
+	fname := path.Base(file)
+	if !strings.HasSuffix(fname, ".app.yml") {
+		return ""
+	}
+
+	return fname[:len(fname)-8]
 }
 
 // runCommand runs a command
