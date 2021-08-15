@@ -20,6 +20,16 @@ type updateUserInput struct {
 	Passwd   string `form:"passwd"`
 }
 
+type createUserInput struct {
+	Username string `form:"username" binding:"required"`
+	Passwd   string `form:"passwd" binding:"required"`
+}
+
+type updatePasswordController struct {
+	Passwd string `form:"passwd" binding:"required"`
+	Verify string `form:"verify" binding:"required"`
+}
+
 // LoginController displays the logn for and handles the login logic
 func LoginController(ctx *gin.Context) {
 	var input loginInput
@@ -88,7 +98,23 @@ func UpdateUserController(ctx *gin.Context) {
 		return
 	}
 
-	view(ctx, "pages/users.index.html", gin.H{
+	err := ctx.Bind(&input)
+	if err != nil {
+		if input.Username != "" && input.Passwd != "" {
+			errorString = "Bad Input"
+		}
+	} else {
+		err := models.UpdateUser(user, input.Username, input.Passwd)
+		if err == nil {
+			errorString = "Update Failed"
+		} else {
+			ctx.Redirect(http.StatusFound, "/users")
+			ctx.AbortWithStatus(http.StatusFound)
+			return
+		}
+	}
+
+	view(ctx, "pages/users.update.html", gin.H{
 		"subject":     user,
 		"errorString": errorString,
 		"input":       input,
@@ -96,8 +122,69 @@ func UpdateUserController(ctx *gin.Context) {
 
 }
 
+// CreateUserController will show the create user form and attempt to actually create the user
 func CreateUserController(ctx *gin.Context) {
+	var input createUserInput
+	var errorString string
+
+	err := ctx.Bind(&input)
+	if err != nil {
+		if input.Username != "" && input.Passwd != "" {
+			errorString = "Bad Input"
+		}
+	} else {
+		user := models.CreateUser(input.Username, input.Passwd)
+		if user == nil {
+			errorString = "Create Failed"
+		} else {
+			ctx.Redirect(http.StatusFound, "/users")
+			ctx.AbortWithStatus(http.StatusFound)
+			return
+		}
+	}
+
+	view(ctx, "pages/users.create.html", gin.H{
+		"errorString": errorString,
+		"input":       input,
+	})
+
 }
 
+// UpdatePasswordController will let the user update their password
 func UpdatePasswordController(ctx *gin.Context) {
+	var input updatePasswordController
+	var errorString string
+
+	userId := ctx.Param("user_id")
+
+	user := models.FindUser(userId)
+	if user == nil {
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	err := ctx.Bind(&input)
+	if err != nil {
+		if input.Verify != "" && input.Passwd != "" {
+			errorString = "Bad Input"
+		}
+	} else if input.Verify != input.Passwd {
+		errorString = "Passwords do not match"
+	} else {
+		err := models.UpdateUser(user, user.Name, input.Passwd)
+		if err == nil {
+			errorString = "Update Failed"
+		} else {
+			ctx.Redirect(http.StatusFound, "/users")
+			ctx.AbortWithStatus(http.StatusFound)
+			return
+		}
+	}
+
+	view(ctx, "pages/users.password.html", gin.H{
+		"subject":     user,
+		"errorString": errorString,
+		"input":       input,
+	})
+
 }
