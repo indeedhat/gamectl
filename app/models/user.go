@@ -62,8 +62,19 @@ func CreateUser(name, password string) *User {
 	return &user
 }
 
-// UpdateUser is a helper function to make deleting users a little more readable
-func UpdateUser(user *User) error {
+// UpdateUser is a helper function to make updating users simpler
+func UpdateUser(user *User, name, passwd string) error {
+	user.Name = name
+
+	if passwd != "" {
+		hash, err := hashPassword(passwd)
+		if err != nil {
+			return err
+		}
+
+		user.Password = hash
+	}
+
 	tx := DB.Save(user)
 
 	return tx.Error

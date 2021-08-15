@@ -48,6 +48,11 @@ func BuildRoutes() *gin.Engine {
 		private.POST("/ap/apps/:app_key/config/:config_key", api.SaveAppConfig)
 	}
 
+	rootAdmin := router.Group("/", middleware.IsLoggedIn, middleware.IsRoot)
+	{
+		rootAdmin.GET("/users/:user_id", controllers.UpdateUserController)
+	}
+
 	return router
 }
 
