@@ -15,6 +15,11 @@ type loginInput struct {
 	Passwd   string `form:"passwd" binding:"required"`
 }
 
+type updateUserInput struct {
+	Username string `form:"username" binding:"required"`
+	Passwd   string `form:"passwd"`
+}
+
 // LoginController displays the logn for and handles the login logic
 func LoginController(ctx *gin.Context) {
 	var input loginInput
@@ -54,4 +59,45 @@ func LogoutController(ctx *gin.Context) {
 	ses.Save()
 
 	ctx.Redirect(http.StatusFound, "/login")
+}
+
+// ListUsersController displays the full user list
+func ListUsersController(ctx *gin.Context) {
+	users := models.ListUsers()
+
+	if users == nil {
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	view(ctx, "pages/users.index.html", gin.H{
+		"users": users,
+	})
+}
+
+// UpdateUserController will display the update form and handle the submit
+func UpdateUserController(ctx *gin.Context) {
+	var input updateUserInput
+	var errorString string
+
+	userId := ctx.Param("user_id")
+
+	user := models.FindUser(userId)
+	if user == nil {
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	view(ctx, "pages/users.index.html", gin.H{
+		"subject":     user,
+		"errorString": errorString,
+		"input":       input,
+	})
+
+}
+
+func CreateUserController(ctx *gin.Context) {
+}
+
+func UpdatePasswordController(ctx *gin.Context) {
 }

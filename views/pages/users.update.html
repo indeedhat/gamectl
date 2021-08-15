@@ -1,0 +1,26 @@
+{{ define "pages/users.update.html" }}
+    {{ template "partials/header.html" . }}
+
+    <div class="bodyTitle">Update User ({{ .subject.Username }})</div>
+    <div class="body">
+        <form action="" method="post">
+            {{ if .errorString }}
+                <div class="error">{{ .errorString }}</div>
+            {{ end }}
+
+            <div>
+                <label for="username">Username:</label>
+                <input name="username" id="username" value="{{ fallback .input.Username .subject.Username }}" />
+            </div>
+            <div>
+                <label for="passwd">Password: (optional) </label>
+                <input name="passwd" id="passwd" type="password" value="" />
+            </div>
+            <div>
+                <input type="submit" value="Update User" />
+            </div>
+        </form>
+    </div>
+
+    {{ template "partials/footer.html" . }}
+{{ end }}
