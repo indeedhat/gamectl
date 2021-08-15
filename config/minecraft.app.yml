@@ -1,6 +1,6 @@
 title: "Minecraft server"
 description: ""
-icon: ".examples/minecraft/icon.jpg"
+icon: "/assets/img/mc.png"
 commands:
     status: ".examples/minecraft/status.sh"
     start: ".examples/minecraft/start.sh"
