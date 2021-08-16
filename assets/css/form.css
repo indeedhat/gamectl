@@ -34,6 +34,7 @@ form .group {
 }
 
 form .field label {
+    margin-bottom: 2px;
     font-weight: bold;
 }
 
