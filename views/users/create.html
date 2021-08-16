@@ -6,15 +6,15 @@
             <div class="error">{{ .errorString }}</div>
         {{ end }}
 
-        <div>
+        <div class="field">
             <label for="username">Username:</label>
             <input name="username" id="username" value="{{ .input.Username }}" />
         </div>
-        <div>
+        <div class="field">
             <label for="passwd">Password:</label>
             <input name="passwd" id="passwd" type="password" value="" />
         </div>
-        <div>
+        <div class="group">
             <input type="submit" value="Create User" />
         </div>
     </form>

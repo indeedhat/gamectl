@@ -37,7 +37,7 @@ func LoginController(ctx *gin.Context) {
 
 	err := ctx.Bind(&input)
 	if err != nil {
-		if input.Username != "" && input.Passwd != "" {
+		if input.Username != "" || input.Passwd != "" {
 			errorMessage = "Bad input"
 		}
 	} else {
