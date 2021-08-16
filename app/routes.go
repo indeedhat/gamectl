@@ -5,6 +5,8 @@ import (
 	"html/template"
 	"os"
 
+	"github.com/foolin/goview"
+	"github.com/foolin/goview/supports/ginview"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/memstore"
 	"github.com/indeedhat/command-center/app/controllers"
@@ -23,7 +25,6 @@ var (
 func BuildRoutes() *gin.Engine {
 	router := gin.Default()
 
-	setupTemplateFunctions(router)
 	setupStatics(router)
 	setupSessions(router)
 
@@ -66,18 +67,10 @@ func BuildRoutes() *gin.Engine {
 // along with assign the templating engines its views directory
 func setupStatics(router *gin.Engine) {
 	router.Static("/assets", "./assets")
-	router.LoadHTMLGlob("./views/**/*")
-}
 
-// setupSessions for use with gin for user sessions etc
-func setupSessions(router *gin.Engine) {
-	sessionStore = memstore.NewStore([]byte(os.Getenv("SESSION_SECRET")))
-
-	router.Use(sessions.Sessions("session", sessionStore))
-}
-
-func setupTemplateFunctions(router *gin.Engine) {
-	router.SetFuncMap(template.FuncMap{
+	viewsConfig := goview.DefaultConfig
+	viewsConfig.DisableCache = true
+	viewsConfig.Funcs = template.FuncMap{
 		"json": func(data interface{}) string {
 			bytes, err := json.Marshal(data)
 			if err != nil {
@@ -86,12 +79,14 @@ func setupTemplateFunctions(router *gin.Engine) {
 
 			return string(bytes)
 		},
-		"fallback": func(prefered, fallback string) string {
-			if prefered != "" {
-				return prefered
-			}
+	}
 
-			return fallback
-		},
-	})
+	router.HTMLRender = ginview.New(viewsConfig)
+}
+
+// setupSessions for use with gin for user sessions etc
+func setupSessions(router *gin.Engine) {
+	sessionStore = memstore.NewStore([]byte(os.Getenv("SESSION_SECRET")))
+
+	router.Use(sessions.Sessions("session", sessionStore))
 }

@@ -1,0 +1,35 @@
+{{ define "content" }}
+<div class="bodyTitle">> Main Controls</div>
+<div class="body">
+    {{ range $key, $app := .apps }}
+        <div 
+            class="serverStatus" 
+            data-key="{{ $key }}" 
+            data-config="{{ json $app.FileKeys }}"
+        >
+            <div class="serverTitle">> {{ $app.Title }}</div>
+
+            <div class="dataContainer">
+                <div class="dataTile statusLabel">Status  :</div>  
+                <div class="dataTile status"> Fixme</div>
+
+                <div class="dataTile playersLabel">Players :</div>  
+                <div class="dataTile players" > 
+                Fixme/Fixme
+                </div>
+
+                <div class="dataTile uptimeLabel">Uptime  :</div>  
+                <div class="dataTile uptime"> fixme</div>
+
+            </div>
+            <img class="icon" src="{{ $app.Icon }}">
+            <div class="controls">
+                <div class="controller startStop">Stop</div>
+                <div class="controller restart">Restart</div>
+                <div class="controller config">Config</div>
+            </div>
+        </div>
+        <script>update_css()</script>
+    {{ end }}
+</div>
+{{ end }}
