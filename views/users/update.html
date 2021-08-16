@@ -8,7 +8,7 @@
 
         <div>
             <label for="username">Username:</label>
-            <input name="username" id="username" value="{{ fallback .input.Username .subject.Name }}" />
+            <input name="username" id="username" value="{{ or .input.Username .subject.Name }}" />
         </div>
         <div>
             <label for="passwd">Password: (optional) </label>
