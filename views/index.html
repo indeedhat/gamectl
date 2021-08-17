@@ -31,5 +31,18 @@
         </div>
         <script>update_css()</script>
     {{ end }}
+
+    <div id="modal-content" style="display: none;">
+        This is a test
+        <br />
+        Click outsise the box to close
+    </div>
+    <script type="module">
+        import { Modal } from "/assets/js/modal.js";
+
+        const modalTest = new Modal();
+
+        setTimeout(() => modalTest.open(), 3000);
+    </script>
 </div>
 {{ end }}

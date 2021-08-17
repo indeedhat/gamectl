@@ -1,0 +1,48 @@
+#modal-wrapper {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+#modal-cover {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+
+    background-color: rgba(100, 100, 100, 0.6);
+}
+
+#modal {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    min-width: 40%;
+    min-height: 30%;
+
+    background-color: rgba(100,100,100,1);
+    border: 2px solid rgba(0, 0, 0,0.9);    
+}
+
+#modal-title {
+    padding:5px 10px;
+    background-color: rgba(0,0,0,1);
+
+    font-size:12px;
+    color:rgb(255,255,255);
+}
+
+#modal-title span {
+    margin-left: 10px;
+}
+
+#modal-content {
+    padding: 10px;
+}
