@@ -12,11 +12,29 @@ class Modal
         this._setupBinds();
     }
 
-
+    /** 
+     * Open the modal
+     *
+     * When opened the modal content will be refreshed from the template given (element or text)
+     *
+     * if set the onOpen closure will be called
+     *
+     * @return void
+     */
     open()
     {
         this.$title.innerText = this.config.title;
-        this.$body.innderHTML = this.$conentTemplate.innerHTML;
+        this.$body.innerHTML = "";
+
+        if (this.$contentTemplate) {
+            this.$body.innerHTML = this.$contentTemplate.innerHTML;
+        } else if ("string" === typeof this.config.content) {
+            this.$body.append(...html(this.config.content));
+        } else if ("function" === typeof this.config.conent[Symbol.iterator]) {
+            this.$body.append(...this.config.conent);
+        } else if (this.config.content) {
+            this.$body.append(this.config.content);
+        }
 
         this.$wrapper.style.display = "block";
 
@@ -25,6 +43,13 @@ class Modal
         }
     }
 
+    /**
+     * Close the modal
+     *
+     * If set the onClose closure will be called
+     *
+     * @return void
+     */
     close()
     {
         this.$wrapper.style.display = "none";
@@ -70,13 +95,16 @@ class Modal
         this.$title = document.querySelector("#modal-title span");
         this.$body = document.getElementById("modal-body");
 
-        this.$conentTemplate = document.querySelector(this.config.contentSelector);
+        if (this.config.contentSelector) {
+            this.$contentTemplate = document.querySelector(this.config.contentSelector);
+        }
     }
 }
 
 
 const DefaultConfig = {
     title: "Modal",
+    content: null,
     contentSelector: "#modal-content",
     onOpen: () => console.log("modal opened"),
     onClose: () => console.log("modal closed"),
