@@ -10,6 +10,20 @@ cmake
 make run
 ```
 
+## TODO
+- [ ] implement start/stop restart in frontend
+- [ ] implement status in frontend
+- [ ] server logs
+    - [ ] add to config
+        - should be able to have multple log files/commands
+    - [ ] add websocket endpoint for streaming logs
+    - [ ] add option to frontend (show in modal)
+- [ ] maybe add some unit testing
+- [ ] docker file
+    - this may not be possible given that it will need to run commands on the host machine
+- [ ] docker-compose config
+- [ ] reload app config
+
 The webui will  be available at localhost:8080
 
 ## Kagorus jobs
