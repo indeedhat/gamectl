@@ -7,4 +7,4 @@ commands:
     start: ".examples/minecraft/start.sh"
     stop: ".examples/minecraft/stop.sh"
 files:
-    something: some/config/file.cfg
+    server.properties: ".examples/minecraft/config/server.properties"

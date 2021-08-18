@@ -1,0 +1,21 @@
+.block-list .block-entry {
+    border: 2px solid black;
+    margin-bottom: 10px;
+    text-align: center;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+#config-loading {
+    display: none;
+
+    text: center;
+    font-size: 33px;
+    margin-top: 30px;
+}
+
+#config-form {
+    display: none;
+}

@@ -15,6 +15,23 @@ form .error {
     color: white;
     font-weight: bold;
 }
+form .error:empty {
+    display: none;
+}
+
+form .alert {
+    margin: 4px 8px;
+    padding: 4px 8px;
+
+    background: #87fdb5;
+    border: 2px solid green;
+
+    color: white;
+    font-weight: bold;
+}
+form .alert:empty {
+    display: none;
+}
 
 form .field {
     display: flex;

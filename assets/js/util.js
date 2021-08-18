@@ -37,7 +37,25 @@ const html = htmlString => {
     return template.content.childNodes;
 };
 
+/**
+ * Convert an object for a form instance
+ *
+ * @param object data
+ *
+ * @return FormData
+ */
+const objectToForm = data => {
+    let form = new FormData();
+
+    for (let key in data) {
+        form.append(key, data[key]);
+    }
+
+    return form;
+};
+
 export {
     once,
-    html
+    html,
+    objectToForm
 };

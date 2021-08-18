@@ -29,23 +29,14 @@
                 <div class="controller config">Config</div>
             </div>
         </div>
+        <script type="module">
+            import AppConfig from '/assets/js/app-config.js';
+
+            new AppConfig('{{ $app.Title }}', '{{ $key }}');
+        </script>
         <script>update_css()</script>
     {{ end }}
 </div>
 
-<!-- BEGIN TEST -->
-<div id="modal-content" style="display: none;">
-    This is a test
-    <br />
-    Click outsise the box to close
-</div>
-<script type="module">
-    import { Modal } from "/assets/js/modal.js";
-
-    const modalTest = new Modal();
-
-    setTimeout(() => modalTest.open(), 3000);
-</script>
-<!-- END TEST -->
 
 {{ end }}

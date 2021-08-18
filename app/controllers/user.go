@@ -9,23 +9,26 @@ import (
 	"github.com/indeedhat/command-center/app/models"
 )
 
-// loginInput
+// loginInput form input for logging in
 type loginInput struct {
 	Username string `form:"username" binding:"required"`
 	Passwd   string `form:"passwd" binding:"required"`
 }
 
+// updateUserInput form input for updatig a user
 type updateUserInput struct {
 	Username string `form:"username" binding:"required"`
 	Passwd   string `form:"passwd"`
 }
 
+// createUserInput form input for creating a new user
 type createUserInput struct {
 	Username string `form:"username" binding:"required"`
 	Passwd   string `form:"passwd" binding:"required"`
 }
 
-type updatePasswordController struct {
+// updatePasswordInput form input for a user to update their own password
+type updatePasswordInput struct {
 	Passwd string `form:"passwd" binding:"required"`
 	Verify string `form:"verify" binding:"required"`
 }
@@ -152,7 +155,7 @@ func CreateUserController(ctx *gin.Context) {
 
 // UpdatePasswordController will let the user update their password
 func UpdatePasswordController(ctx *gin.Context) {
-	var input updatePasswordController
+	var input updatePasswordInput
 	var errorString string
 
 	userId := ctx.Param("user_id")
