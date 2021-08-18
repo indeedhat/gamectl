@@ -36,7 +36,10 @@ type App struct {
 		Stop   string
 	}
 
-	Files map[string]string
+	Files map[string]struct {
+		Path        string
+		Description string
+	}
 }
 
 // Start the application
@@ -70,14 +73,14 @@ func (app App) Status() (*AppStatus, error) {
 }
 
 // FileKeys will return the keys for any config files defined on the application
-func (app App) FileKeys() []string {
-	var keys []string
+func (app App) ConfigFiles() map[string]string {
+	fileList := make(map[string]string)
 
-	for key := range app.Files {
-		keys = append(keys, key)
+	for key, info := range app.Files {
+		fileList[key] = info.Description
 	}
 
-	return keys
+	return fileList
 }
 
 // Apps will get apps from cache

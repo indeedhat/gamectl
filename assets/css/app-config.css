@@ -7,6 +7,10 @@
     font-size: 20px;
     cursor: pointer;
 }
+.block-list .block-entry .description {
+    font-weight: normal;
+    color: darkgray;
+}
 
 .block-list .block-entry:hover {
     border-color: white;

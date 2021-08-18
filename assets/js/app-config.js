@@ -28,7 +28,7 @@ class AppConfigController
     _loadConfig()
     {
         try {
-            this.configKeys = JSON.parse(this.$app.dataset.config);
+            this.configFiles = JSON.parse(this.$app.dataset.config);
         } catch (e) {
             return false;
         }
@@ -49,7 +49,7 @@ class AppConfigController
     {
         this.modal = new Modal({
             title: `${this.appName} Config`,
-            content: modalTemplate(this.appKey, this.configKeys),
+            content: modalTemplate(this.appKey, this.configFiles),
             onOpen: this._handleModalOpen.bind(this)
         });
 
@@ -78,7 +78,9 @@ class AppConfigController
         };
 
         $listEntries.onclick = async e => {
-            const configKey = e.target.innerText.trim();
+            const target = e.target.className === "block-entry" ? e.target : e.target.parentNode;
+            const configKey = target.dataset.key;
+
             $formError.innerHTML = "";
             $formAlert.innerHTML = "";
 
@@ -133,14 +135,18 @@ class AppConfigController
  * Build up a template for the modal based on the app config
  *
  * @param string appKey
- * @param array configKeys
+ * @param array configFiles
  *
  * @return string
  */
-const modalTemplate = (appKey, configKeys) => {
+const modalTemplate = (appKey, configFiles) => {
     let blocks = "";
-    for (let i in configKeys) {
-        blocks += `<div class="block-entry">${configKeys[i]}</div>`;
+    for (let key in configFiles) {
+        blocks += `
+            <div class="block-entry" data-key="${key}">
+                ${key}
+                <div class="description">${configFiles[key]}</div>
+            </div>`;
     }
 
     return `
