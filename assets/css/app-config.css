@@ -8,6 +8,10 @@
     cursor: pointer;
 }
 
+.block-list .block-entry:hover {
+    border-color: white;
+}
+
 #config-loading {
     display: none;
 

@@ -149,6 +149,13 @@ const modalTemplate = (appKey, configKeys) => {
 
             <div id="config-list">
                 <h2>Server Configuration Files</h2>
+                <div class="error">
+                    If you dont know what your doing please leave well enough alone
+                    <br />
+                    <br />
+                    there is no validation on updating config and uploading an invalid file may
+                    break the server.
+                </div>
                 <div class="block-list">
                     ${blocks}
                 </div>
