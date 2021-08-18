@@ -77,7 +77,7 @@ class AppConfigController
             $configList.style.display    = "block";
         };
 
-        $listEntries.onclick = e => {
+        $listEntries.onclick = async e => {
             const configKey = e.target.innerText.trim();
             $formError.innerHTML = "";
             $formAlert.innerHTML = "";
@@ -86,45 +86,45 @@ class AppConfigController
             $configLoading.style.display = "block";
             $configList.style.display    = "none";
 
-            $configForm.querySelector("form").onsubmit = e => {
+            $configForm.querySelector("form").onsubmit = async e => {
                 e.preventDefault();
 
                 $formAlert.innerHTML = "";
                 $formError.innerHTML = "";
 
-                post(`/api/apps/${this.appKey}/config/${configKey}`, {data: $textArea.value})
-                    .then(([status, response]) => {
-                        if (status === 404) {
-                            $formError.innerHtml = "Config not found";
-                        } else if (status == 500) {
-                            $formError.innerHtml = "Update Failed";
-                        } else if (response.outcome) {
-                            $formAlert.innerHTML = "Config Updated";
-                        } else {
-                            $formError.innerHtml = response.message || "Unknown Error";
-                        }
-                    })
-                    .catch(e => {
-                        $formError.innerHTML = "Unknwon Error";
-                        console.error(e);
-                    });
+                try {
+                    let [status, response] = await post(`/api/apps/${this.appKey}/config/${configKey}`, {data: $textArea.value});
+
+                    if (status === 404) {
+                        $formError.innerHtml = "Config not found";
+                    } else if (status == 500) {
+                        $formError.innerHtml = "Update Failed";
+                    } else if (!response.outcome) {
+                        $formError.innerHtml = response.message || "Unknown Error";
+                    } else {
+                        $formAlert.innerHTML = "Config Updated";
+                    }
+                } catch (e) {
+                    $formError.innerHTML = "Unknwon Error";
+                    console.error(e);
+                }
             };
 
-            get(`/api/apps/${this.appKey}/config/${configKey}`)
-                .then(([_, response]) => {
-                    if (!response.outcome) {
-                        throw new Error("failed");
-                    }
+            try {
+                let [_, response] = await get(`/api/apps/${this.appKey}/config/${configKey}`);
 
-                    $textArea.value = response.file;
-                    $configLoading.style.display = "none";
-                    $configForm.style.display    = "block";
-                })
-                .catch(e => {
-                    $configLoading.style.display = "none";
-                    $configList.style.display    = "block";
-                    console.error(e);
-                });
+                if (!response.outcome) {
+                    throw new Error("failed");
+                }
+
+                $textArea.value = response.file;
+                $configLoading.style.display = "none";
+                $configForm.style.display    = "block";
+            } catch (e) {
+                $configLoading.style.display = "none";
+                $configList.style.display    = "block";
+                console.error(e);
+            }
         };
     }
 }
