@@ -49,6 +49,8 @@ func BuildRoutes() *gin.Engine {
 
 		private.GET("/api/apps/:app_key/config/:config_key", api.LoadAppConfig)
 		private.POST("/api/apps/:app_key/config/:config_key", api.SaveAppConfig)
+
+		private.GET("/api/apps/:app_key/logs/:log_key", api.LogStreamController)
 	}
 
 	rootAdmin := router.Group("/", middleware.IsLoggedIn, middleware.IsRoot)

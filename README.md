@@ -13,10 +13,11 @@ make run
 ## TODO
 - [ ] implement start/stop restart in frontend
 - [ ] implement status in frontend
-- [ ] server logs
-    - [ ] add to config
-        - should be able to have multple log files/commands
-    - [ ] add websocket endpoint for streaming logs
+- [x] server logs
+    - [x] add to config
+    - [x] should be able to have multple log files/commands
+    - [x] add websocket endpoint for streaming logs
+        - ended up using http streams instead of web sockets
     - [ ] add option to frontend (show in modal)
 - [ ] maybe add some unit testing
 - [ ] docker file

@@ -38,6 +38,29 @@
     {{ end }}
 
     <div class="clearfix"></div>
+
+    <!-- Begin Test -->
+    <script type="module">
+        import Modal from "/assets/js/modal.js";
+
+        const modal = new Modal({
+            title: "Log Test",
+            content: `<pre class="logs" style="max-height:50vh;overflow:auto;"></pre>`,
+            onOpen: function() {
+                let $logs = modal.$body.querySelector(".logs");
+
+                let source = new EventSource("/api/apps/minecraft/logs/server.sh");
+                source.addEventListener("message", e => {
+                    console.log("got data");
+                    $logs.innerHTML += e.data
+                }, false);
+            }
+        });
+
+        modal.open();
+    </script>
+
+    <!-- End Test -->
 </div>
 
 

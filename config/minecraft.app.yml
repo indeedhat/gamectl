@@ -3,17 +3,27 @@ description: ""
 icon: "/assets/img/mc.png"
 maxPlayers: 10
 commands:
-    status: ".examples/minecraft/status.sh"
-    start: ".examples/minecraft/start.sh"
-    stop: ".examples/minecraft/stop.sh"
+  status: ".examples/minecraft/status.sh"
+  start: ".examples/minecraft/start.sh"
+  stop: ".examples/minecraft/stop.sh"
 files:
-    server.properties: 
-      path: ".examples/minecraft/config/server.properties"
-      description: |
-        This file contains the server setup for vanilla minecraft
-
-    whitelist.json:
-      path: ".examples/minecraft/config/whitelist.json"
-      description: |
-        A list of accounts that are allowed to connect to the server
+  server.properties: 
+    path: ".examples/minecraft/config/server.properties"
+    description: |
+      This file contains the server setup for vanilla minecraft
+  whitelist.json:
+    path: ".examples/minecraft/config/whitelist.json"
+    description: |
+      A list of accounts that are allowed to connect to the server
+logs:
+  server.log:
+    path: ".examples/minecraft/logs/server.log"
+    type: file
+    description: |
+      The main server log file
+  server.sh:
+    path: ".examples/minecraft/logs/log.sh"
+    type: command
+    description: |
+      A command that generates the log files
 

@@ -40,6 +40,8 @@ type App struct {
 		Path        string
 		Description string
 	}
+
+	Logs map[string]ServerLog
 }
 
 // Start the application

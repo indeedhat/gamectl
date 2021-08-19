@@ -4,6 +4,7 @@ go 1.16
 
 require (
 	github.com/foolin/goview v0.3.0 // indirect
+	github.com/fsnotify/fsnotify v1.5.0 // indirect
 	github.com/gin-contrib/sessions v0.0.3 // indirect
 	github.com/gin-gonic/gin v1.7.3 // indirect
 	github.com/go-playground/validator/v10 v10.8.0 // indirect
