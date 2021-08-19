@@ -63,6 +63,9 @@ div.serverTitle{
     padding:5px 10px;
 }
 
+a {
+    color:white;
+}
 div.dataTile{
     width:50%;
     float:left;
