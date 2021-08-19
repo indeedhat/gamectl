@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-contrib/sessions"
@@ -16,8 +15,6 @@ func IsLoggedIn(ctx *gin.Context) {
 	ses := sessions.Default(ctx)
 
 	userId := ses.Get("ID")
-	log.Printf("user: %#v", userId)
-
 	if userId == "0" || userId == nil {
 		ctx.Redirect(http.StatusFound, "/login")
 		ctx.AbortWithStatus(http.StatusFound)
@@ -31,7 +28,6 @@ func IsLoggedIn(ctx *gin.Context) {
 		return
 	}
 
-	log.Println(user)
 	ctx.Set("user", user)
 
 	ctx.Next()

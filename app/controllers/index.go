@@ -6,7 +6,7 @@ import (
 )
 
 func IndexController(ctx *gin.Context) {
-	view(ctx, "pages/index.html", gin.H{
+	view(ctx, "index", gin.H{
 		"apps": config.Apps(),
 	})
 }

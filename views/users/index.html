@@ -1,0 +1,52 @@
+{{ define "content" }}
+<div class="bodyTitle">User List</div>
+<div class="body">
+    {{ if $.user.Root }}
+        <a href="/users/create">
+            <button>Create User</button>
+        </a>
+    {{ end }}
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Root Admin</th>
+                {{ if .user.Root }}
+                    <th>&nbsp;</th>
+                {{ end }}
+            </tr>
+        </thead>
+
+        <tbody>
+            {{ range .users }}
+                <tr>
+                    <td>{{ .ID }}</td>
+                    <td>{{ .Name }}</td>
+                    <td>
+                        {{ if .Root }}
+                            True
+                        {{ else }}
+                            False
+                        {{ end }}
+                    </td>
+                    {{ if $.user.Root }}
+                        <td>
+                            <a href="/users/{{ .ID }}">Edit</a>
+                        </td>
+                    {{ end }}
+                </tr>
+            {{ else }}
+                <tr>
+                    <td colspan="10">
+                        <div class="error">
+                            There are no users to display at this time
+                        </div>
+                    </td>
+                </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</div>
+{{ end }}

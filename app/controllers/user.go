@@ -9,23 +9,26 @@ import (
 	"github.com/indeedhat/command-center/app/models"
 )
 
-// loginInput
+// loginInput form input for logging in
 type loginInput struct {
 	Username string `form:"username" binding:"required"`
 	Passwd   string `form:"passwd" binding:"required"`
 }
 
+// updateUserInput form input for updatig a user
 type updateUserInput struct {
 	Username string `form:"username" binding:"required"`
 	Passwd   string `form:"passwd"`
 }
 
+// createUserInput form input for creating a new user
 type createUserInput struct {
 	Username string `form:"username" binding:"required"`
 	Passwd   string `form:"passwd" binding:"required"`
 }
 
-type updatePasswordController struct {
+// updatePasswordInput form input for a user to update their own password
+type updatePasswordInput struct {
 	Passwd string `form:"passwd" binding:"required"`
 	Verify string `form:"verify" binding:"required"`
 }
@@ -37,7 +40,7 @@ func LoginController(ctx *gin.Context) {
 
 	err := ctx.Bind(&input)
 	if err != nil {
-		if input.Username != "" && input.Passwd != "" {
+		if input.Username != "" || input.Passwd != "" {
 			errorMessage = "Bad input"
 		}
 	} else {
@@ -55,7 +58,7 @@ func LoginController(ctx *gin.Context) {
 		}
 	}
 
-	view(ctx, "pages/login.html", gin.H{
+	view(ctx, "login", gin.H{
 		"input": input,
 		"error": errorMessage,
 	})
@@ -80,7 +83,7 @@ func ListUsersController(ctx *gin.Context) {
 		return
 	}
 
-	view(ctx, "pages/users.index.html", gin.H{
+	view(ctx, "users/index", gin.H{
 		"users": users,
 	})
 }
@@ -105,7 +108,7 @@ func UpdateUserController(ctx *gin.Context) {
 		}
 	} else {
 		err := models.UpdateUser(user, input.Username, input.Passwd)
-		if err == nil {
+		if err != nil {
 			errorString = "Update Failed"
 		} else {
 			ctx.Redirect(http.StatusFound, "/users")
@@ -114,7 +117,7 @@ func UpdateUserController(ctx *gin.Context) {
 		}
 	}
 
-	view(ctx, "pages/users.update.html", gin.H{
+	view(ctx, "users/update", gin.H{
 		"subject":     user,
 		"errorString": errorString,
 		"input":       input,
@@ -143,7 +146,7 @@ func CreateUserController(ctx *gin.Context) {
 		}
 	}
 
-	view(ctx, "pages/users.create.html", gin.H{
+	view(ctx, "users/create", gin.H{
 		"errorString": errorString,
 		"input":       input,
 	})
@@ -152,7 +155,7 @@ func CreateUserController(ctx *gin.Context) {
 
 // UpdatePasswordController will let the user update their password
 func UpdatePasswordController(ctx *gin.Context) {
-	var input updatePasswordController
+	var input updatePasswordInput
 	var errorString string
 
 	userId := ctx.Param("user_id")
@@ -172,7 +175,7 @@ func UpdatePasswordController(ctx *gin.Context) {
 		errorString = "Passwords do not match"
 	} else {
 		err := models.UpdateUser(user, user.Name, input.Passwd)
-		if err == nil {
+		if err != nil {
 			errorString = "Update Failed"
 		} else {
 			ctx.Redirect(http.StatusFound, "/users")
@@ -181,7 +184,7 @@ func UpdatePasswordController(ctx *gin.Context) {
 		}
 	}
 
-	view(ctx, "pages/users.password.html", gin.H{
+	view(ctx, "users/password", gin.H{
 		"subject":     user,
 		"errorString": errorString,
 		"input":       input,

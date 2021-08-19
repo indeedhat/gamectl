@@ -2,6 +2,12 @@
     box-sizing: border-box;
 }
 
+.clearfix:after {
+    content: '';
+    display: table;
+    clear: both;
+}
+
 html, body {
     padding: 0;
     margin: 0;
@@ -94,4 +100,33 @@ div.controller{
 img.icon{
     width:30%;
     float:left;
+}
+
+div.error,
+div.alert {
+    margin: 8px;
+    padding: 4px 8px;
+}
+
+div.error:empty,
+div.alert:empty {
+    display: none;
+}
+
+div.error {
+    background: #d66;
+    border: 2px solid red;
+
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+div.alert {
+    background: #87fdb5;
+    border: 2px solid green;
+
+    color: green;
+    font-weight: bold;
+    text-align: center;
 }

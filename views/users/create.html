@@ -1,0 +1,22 @@
+{{ define "content" }}
+<div class="bodyTitle">Create User</div>
+<div class="body">
+    <form action="" method="post">
+        {{ if .errorString }}
+            <div class="error">{{ .errorString }}</div>
+        {{ end }}
+
+        <div class="field">
+            <label for="username">Username:</label>
+            <input name="username" id="username" value="{{ .input.Username }}" />
+        </div>
+        <div class="field">
+            <label for="passwd">Password:</label>
+            <input name="passwd" id="passwd" type="password" value="" />
+        </div>
+        <div class="group">
+            <input type="submit" value="Create User" />
+        </div>
+    </form>
+</div>
+{{ end }}

@@ -20,5 +20,9 @@ func view(ctx *gin.Context, template string, data gin.H) {
 		}
 	}
 
+	if _, ok := data["Title"]; !ok {
+		data["Title"] = "Command Center"
+	}
+
 	ctx.HTML(http.StatusOK, template, data)
 }

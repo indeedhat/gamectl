@@ -24,13 +24,13 @@ func LoadAppConfig(ctx *gin.Context) {
 		return
 	}
 
-	path, ok := app.Files[configKey]
+	info, ok := app.Files[configKey]
 	if !ok {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	contents, err := ioutil.ReadFile(path)
+	contents, err := ioutil.ReadFile(info.Path)
 	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
@@ -59,13 +59,13 @@ func SaveAppConfig(ctx *gin.Context) {
 		return
 	}
 
-	path, ok := app.Files[configKey]
+	info, ok := app.Files[configKey]
 	if !ok {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
-	if err := ioutil.WriteFile(path, []byte(input.Data), 0644); err != nil {
+	if err := ioutil.WriteFile(info.Path, []byte(input.Data), 0644); err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
