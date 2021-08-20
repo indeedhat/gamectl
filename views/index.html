@@ -51,7 +51,7 @@
             onOpen: function() {
                 let $logs = modal.$body.querySelector(".logs");
 
-                source = new EventSource("/api/apps/minecraft/logs/server.sh");
+                source = new EventSource("/api/apps/minecraft/logs/server.log");
                 source.addEventListener("message", e => {
                     console.log("got data");
                     $logs.innerHTML += e.data
