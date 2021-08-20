@@ -2,6 +2,7 @@ package config
 
 import (
 	"bytes"
+	"context"
 	"errors"
 	"io/ioutil"
 	"os"
@@ -51,6 +52,7 @@ func (log ServerLog) watchLogFile(done chan bool) (chan string, error) {
 	output := make(chan string)
 	go func() {
 		var pos int64
+		defer watcher.Close()
 
 		data, _ := readToEndOfFile(log.Path, &pos)
 		output <- data
@@ -88,37 +90,45 @@ func (log ServerLog) watchLogFile(done chan bool) (chan string, error) {
 //
 // i have no idea what i actually did to make it work
 func (log ServerLog) watchLogCommand(done chan bool) (chan string, error) {
-	cmd := exec.Command(log.Path)
+	ctx, cancel := context.WithCancel(context.Background())
+
+	cmd := exec.CommandContext(ctx, log.Path)
 	stdout, err := cmd.StdoutPipe()
 	if err != nil {
+		cancel()
 		return nil, err
 	}
 
 	if err := cmd.Start(); err != nil {
+		cancel()
 		return nil, err
 	}
 
 	output := make(chan string)
 	go func() {
-		for range time.NewTicker(100 * time.Millisecond).C {
-			var buf bytes.Buffer
+		for {
+			select {
+			case <-time.NewTicker(100 * time.Millisecond).C:
+				var buf bytes.Buffer
 
-			for {
-				bucket := make([]byte, 1024)
+				for {
+					bucket := make([]byte, 1024)
 
-				size, _ := stdout.Read(bucket)
-				buf.Write(bucket)
+					size, _ := stdout.Read(bucket)
+					buf.Write(bucket)
 
-				if size < 1024 {
-					break
+					if size < 1024 {
+						break
+					}
 				}
-			}
 
-			output <- buf.String()
+				output <- buf.String()
+
+			case <-done:
+				cancel()
+			}
 		}
 	}()
-
-	time.Sleep(1 * time.Second)
 
 	return output, nil
 }

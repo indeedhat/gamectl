@@ -27,6 +27,7 @@
                 <div class="controller startStop">Stop</div>
                 <div class="controller restart">Restart</div>
                 <div class="controller config">Config</div>
+                <div class="controller logs">[Test]</div>
             </div>
         </div>
         <script type="module">
@@ -42,6 +43,7 @@
     <!-- Begin Test -->
     <script type="module">
         import Modal from "/assets/js/modal.js";
+        let source;
 
         const modal = new Modal({
             title: "Log Test",
@@ -49,15 +51,18 @@
             onOpen: function() {
                 let $logs = modal.$body.querySelector(".logs");
 
-                let source = new EventSource("/api/apps/minecraft/logs/server.sh");
+                source = new EventSource("/api/apps/minecraft/logs/server.sh");
                 source.addEventListener("message", e => {
                     console.log("got data");
                     $logs.innerHTML += e.data
                 }, false);
+            },
+            onClose: function() {
+                source.close();
             }
         });
 
-        modal.open();
+        document.querySelector(".controller.logs").onclick =  modal.open.bind(modal);
     </script>
 
     <!-- End Test -->

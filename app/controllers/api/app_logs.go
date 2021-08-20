@@ -26,9 +26,7 @@ func LogStreamController(ctx *gin.Context) {
 		return
 	}
 
-	// this is totally pointless at the monent bit its required by the watcher
 	done := make(chan bool)
-
 	logUpdated, err := serverLog.Watch(done)
 	if err != nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
@@ -39,6 +37,7 @@ func LogStreamController(ctx *gin.Context) {
 	ctx.Stream(func(writer io.Writer) bool {
 		select {
 		case <-clientDisconnected:
+			done <- true
 			return false
 
 		case data := <-logUpdated:
