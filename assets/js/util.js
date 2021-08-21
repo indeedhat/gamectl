@@ -62,7 +62,6 @@ const objectToForm = data => {
  * @return void
  */
 const loadCss = href => {
-    console.log("loading css:", href);
     document.head.append(
         ...html(`<link type="text/css" rel="stylesheet" href="${href}" />`)
     );
@@ -76,8 +75,6 @@ const loadCss = href => {
  * @return void
  */
 const loadJs = src => {
-    console.log("loading js:", src);
-
     const script = document.createElement("script");
     script.src = src;
     document.head.append(script);

@@ -7,6 +7,7 @@ import (
 
 	"github.com/foolin/goview"
 	"github.com/foolin/goview/supports/ginview"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/memstore"
 	"github.com/indeedhat/command-center/app/controllers"
@@ -24,6 +25,7 @@ var (
 // setting up static fs bindings for serving assets
 func BuildRoutes() *gin.Engine {
 	router := gin.Default()
+	router.Use(gzip.Gzip(gzip.DefaultCompression))
 
 	setupStatics(router)
 	setupSessions(router)

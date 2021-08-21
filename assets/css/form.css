@@ -5,6 +5,10 @@ form {
     text-align: center;
 }
 
+form.full-width {
+    width: 100%;
+}
+
 form .field {
     display: flex;
     flex-direction: column;

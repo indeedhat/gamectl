@@ -224,9 +224,9 @@ class AppConfigController
         let $listEntries = $logsList.querySelectorAll("div.block-entry");
 
         $back.onclick = () => {
-            $logWrapper.style.display    = "none";
+            $logWrapper.style.display = "none";
             $logLoading.style.display = "none";
-            $logsList.style.display    = "block";
+            $logsList.style.display   = "block";
 
             if (this.logSource) {
                 this.logSource.close();
@@ -240,9 +240,9 @@ class AppConfigController
 
             $logs.innerHTML = "";
 
-            $logWrapper.style.display    = "none";
+            $logWrapper.style.display = "none";
             $logLoading.style.display = "block";
-            $logsList.style.display    = "none";
+            $logsList.style.display   = "none";
 
             try {
                 this.logSource = new EventSource(`/api/apps/${this.appKey}/logs/${logKey}`);
@@ -256,17 +256,17 @@ class AppConfigController
                     $logWrapper.querySelector("h2").innerHTML = logKey;
 
                     $logLoading.style.display = "none";
-                    $logWrapper.style.display    = "block";
+                    $logWrapper.style.display = "block";
                 };
                 
                 this.logSource.onerror = () => {
                     $logLoading.style.display = "none";
-                    $logsList.style.display    = "block";
+                    $logsList.style.display   = "block";
                     console.error(e);
                 };
             } catch (e) {
                 $logLoading.style.display = "none";
-                $logsList.style.display    = "block";
+                $logsList.style.display   = "block";
                 console.error(e);
             }
         });
@@ -323,13 +323,13 @@ const configModalTemplate = (appKey, configFiles) =>  `
         <div class="config-form">
             <a href="javascript: void(0);" class="back">&lt; Back</a>
             <h2></h2>
-            <form method="post">
+            <form method="post" class="full-width">
                 <div class="error"></div>
                 <div class="alert"></div>
 
                 <div class="field">
                     <label>Config Body</label>
-                    <textarea name="data" rows="16"></textarea>
+                    <textarea name="data" rows="32"></textarea>
                 </div>
 
                 <div class="group">

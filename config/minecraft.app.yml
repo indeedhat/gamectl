@@ -9,7 +9,7 @@ commands:
 files:
   server.properties: 
     path: ".examples/minecraft/config/server.properties"
-    mode: json
+    mode: properties
     description: |
       This file contains the server setup for vanilla minecraft
   whitelist.json:
