@@ -37,6 +37,12 @@ func (log ServerLog) Watch(done chan bool) (chan string, error) {
 	}
 }
 
+// watchLogFile
+//
+// Watches the files system events for updates and send said updates the the returned chanel
+// thisis run in a goroutine so changes will get posted after the return of this method
+//
+// watching will be stopped and the goroutine killed when the done chanel recieves data
 func (log ServerLog) watchLogFile(done chan bool) (chan string, error) {
 	var err error
 
@@ -52,6 +58,8 @@ func (log ServerLog) watchLogFile(done chan bool) (chan string, error) {
 	output := make(chan string)
 	go func() {
 		var pos int64
+
+		defer close(output)
 		defer watcher.Close()
 
 		data, _ := readToEndOfFile(log.Path, &pos)
@@ -60,7 +68,6 @@ func (log ServerLog) watchLogFile(done chan bool) (chan string, error) {
 		for {
 			select {
 			case <-done:
-				close(output)
 				return
 
 			case event := <-watcher.Events:
@@ -73,7 +80,6 @@ func (log ServerLog) watchLogFile(done chan bool) (chan string, error) {
 					event.Op&fsnotify.Rename == fsnotify.Rename {
 
 					output <- "Log file closed"
-					close(output)
 					return
 				}
 			}
@@ -126,6 +132,7 @@ func (log ServerLog) watchLogCommand(done chan bool) (chan string, error) {
 
 			case <-done:
 				cancel()
+				return
 			}
 		}
 	}()

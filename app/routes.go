@@ -25,7 +25,6 @@ var (
 // setting up static fs bindings for serving assets
 func BuildRoutes() *gin.Engine {
 	router := gin.Default()
-	router.Use(gzip.Gzip(gzip.DefaultCompression))
 
 	setupStatics(router)
 	setupSessions(router)
@@ -70,7 +69,8 @@ func BuildRoutes() *gin.Engine {
 // setupStatics will setup static bindings for asset file serving
 // along with assign the templating engines its views directory
 func setupStatics(router *gin.Engine) {
-	router.Static("/assets", "./assets")
+	static := router.Group("/", gzip.Gzip(gzip.DefaultCompression))
+	static.Static("/assets", "./assets")
 
 	viewsConfig := goview.DefaultConfig
 	viewsConfig.DisableCache = true

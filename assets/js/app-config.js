@@ -260,6 +260,7 @@ class AppConfigController
                 };
                 
                 this.logSource.onerror = () => {
+                    $logWrapper.style.display = "none";
                     $logLoading.style.display = "none";
                     $logsList.style.display   = "block";
                     console.error(e);
