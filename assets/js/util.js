@@ -54,8 +54,39 @@ const objectToForm = data => {
     return form;
 };
 
+/**
+ * Load a css file by adding the link element to the head
+ *
+ * @param string src
+ *
+ * @return void
+ */
+const loadCss = href => {
+    console.log("loading css:", href);
+    document.head.append(
+        ...html(`<link type="text/css" rel="stylesheet" href="${href}" />`)
+    );
+};
+
+/**
+ * Load a css file by adding the link element to the head
+ *
+ * @param string src
+ *
+ * @return void
+ */
+const loadJs = src => {
+    console.log("loading js:", src);
+
+    const script = document.createElement("script");
+    script.src = src;
+    document.head.append(script);
+};
+
 export {
     once,
     html,
-    objectToForm
+    objectToForm,
+    loadCss,
+    loadJs
 };

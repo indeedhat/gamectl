@@ -39,6 +39,7 @@ type App struct {
 	Files map[string]struct {
 		Path        string
 		Description string
+		Mode        string
 	}
 
 	Logs map[string]ServerLog
@@ -75,11 +76,14 @@ func (app App) Status() (*AppStatus, error) {
 }
 
 // FileKeys will return the keys for any config files defined on the application
-func (app App) ConfigFiles() map[string]string {
-	fileList := make(map[string]string)
+func (app App) ConfigFiles() map[string]map[string]string {
+	fileList := make(map[string]map[string]string)
 
 	for key, info := range app.Files {
-		fileList[key] = info.Description
+		fileList[key] = map[string]string{
+			"description": info.Description,
+			"mode":        info.Mode,
+		}
 	}
 
 	return fileList

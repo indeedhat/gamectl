@@ -1,4 +1,4 @@
-import { once, html } from "/assets/js/util.js";
+import { once, html, loadCss, loadJs } from "/assets/js/util.js";
 import { get, post } from "/assets/js/request.js";
 import { Modal } from "/assets/js/modal.js";
 
@@ -26,6 +26,25 @@ class AppConfigController
 
         this._setupConfig();
         this._setupLogs()
+        this._loadCodeMirrorModes();
+    }
+
+    _loadCodeMirrorModes()
+    {
+        for (let key in this.configFiles) {
+            let mode = this.configFiles[key].mode;
+            if (!mode) {
+                continue;
+            }
+
+            if (mode === "json") {
+                mode = "javascript";
+            }
+
+            once(`CodeMirror.${mode}`, () => {
+                loadJs(`/assets/js/lib/codemirror/mode/${mode}/${mode}.js`);
+            });
+        }
     }
 
     _setupConfig()
@@ -51,9 +70,7 @@ class AppConfigController
     _importCss()
     {
         once("appConfigCss", () => {
-            document.head.append(
-                ...html`<link type="text/css" rel="stylesheet" href="/assets/css/app-config.css" />`
-            );
+            loadCss("/assets/css/app-config.css");
         });
     }
 
@@ -61,12 +78,11 @@ class AppConfigController
     {
         this.configModal = new Modal({
             title: `${this.appName} Config`,
-            content: configModalTemplate(this.appKey, this.configFiles),
+            content: configModalTemplate(this.appKey, map(this.configFiles, info => info.description)),
             onOpen: this._handleConfigModalOpen.bind(this)
         });
 
         this.$configButton.onclick = () => {
-            console.log("click")
             this.configModal.open();
         };
 
@@ -117,6 +133,12 @@ class AppConfigController
             $formError.innerHTML = "";
             $formAlert.innerHTML = "";
 
+            let $existingCodeMirror = $configForm.querySelector(".CodeMirror")
+            let codeMirrorInstance = null;
+            if ($existingCodeMirror) {
+                $existingCodeMirror.remove();
+            }
+
             $configForm.style.display    = "none";
             $configLoading.style.display = "block";
             $configList.style.display    = "none";
@@ -126,6 +148,7 @@ class AppConfigController
 
                 $formAlert.innerHTML = "";
                 $formError.innerHTML = "";
+                codeMirrorInstance.save();
 
                 try {
                     let [status, response] = await post(`/api/apps/${this.appKey}/config/${configKey}`, {data: $textArea.value});
@@ -152,8 +175,10 @@ class AppConfigController
                     throw new Error("failed");
                 }
 
-                $textArea.value = response.file;
                 $configForm.querySelector("h2").innerHTML = configKey;
+
+                $textArea.value = response.file;
+                codeMirrorInstance = this._initCodeMirror($textArea, this.configFiles[configKey].mode);
 
                 $configLoading.style.display = "none";
                 $configForm.style.display    = "block";
@@ -163,6 +188,28 @@ class AppConfigController
                 console.error(e);
             }
         });
+    }
+
+    _initCodeMirror(element, mode)
+    {
+        if (mode === "json") {
+            mode = {
+                name: "javascript",
+                json: true
+            };
+        }
+
+        let cm = CodeMirror.fromTextArea(element, {
+            lineNumbers: true,
+            autoRefresh: true,
+            lineWrapping: true,
+            theme: "darcula",
+            mode
+        });
+
+        setTimeout(() => cm.refresh());
+
+        return cm;
     }
 
     _handleLogsModalOpen()
@@ -338,6 +385,23 @@ const buildBlocks = entries => {
     }
 
     return blocks;
+};
+
+/**
+ * Map an object
+ *
+ * @param object object
+ * @param function fn
+ *
+ * @return object
+ */
+const map = (object, fn) => {
+    let out = {};
+    for (let key in object) {
+        out[key] = fn(object[key]); 
+    }
+
+    return out;
 };
 
 export default AppConfigController;

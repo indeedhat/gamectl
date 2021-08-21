@@ -9,10 +9,12 @@ commands:
 files:
   server.properties: 
     path: ".examples/minecraft/config/server.properties"
+    mode: json
     description: |
       This file contains the server setup for vanilla minecraft
   whitelist.json:
     path: ".examples/minecraft/config/whitelist.json"
+    mode: json
     description: |
       A list of accounts that are allowed to connect to the server
 logs:

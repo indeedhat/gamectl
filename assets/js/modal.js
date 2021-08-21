@@ -1,4 +1,4 @@
-import { once, html } from "/assets/js/util.js";
+import { once, html, loadCss } from "/assets/js/util.js";
 
 class Modal
 {
@@ -64,7 +64,7 @@ class Modal
     _importCss()
     {
         once("moduleCss", () => {
-            document.head.append(...html`<link type="text/css" rel="stylesheet" href="/assets/css/modal.css" />`);
+            loadCss("/assets/css/modal.css");
         });
     }
 
