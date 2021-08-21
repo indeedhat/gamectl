@@ -18,12 +18,16 @@ make run
     - [x] should be able to have multple log files/commands
     - [x] add websocket endpoint for streaming logs
         - ended up using http streams instead of web sockets
-    - [ ] add option to frontend (show in modal)
+    - [x] add option to frontend (show in modal)
 - [ ] maybe add some unit testing
-- [ ] docker file
-    - this may not be possible given that it will need to run commands on the host machine
-- [ ] docker-compose config
 - [ ] reload app config
+- [ ] docker support
+    - running this in docker would be a pain as it would require a companion app to run on the host to trigger\
+      the scripts, it is possible and i may look into it
+    - [ ] companion app
+    - [ ] implement into web app
+    - [ ] docker file
+    - [ ] docker-compose config
 
 The webui will  be available at localhost:8080
 
