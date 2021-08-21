@@ -11,29 +11,41 @@ class AppConfigController
         this.appName = appName;
         this.appKey  = appKey;
 
+        this.configFiles = [];
+        this.logFiles    = [];
+
+        this.logSource = null;
+
         this.$app = document.querySelector(`.serverStatus[data-key=${appKey}]`);
         if (!this.$app) {
             return;
         }
 
         this.$configButton = this.$app.querySelector(".controller.config");
-        if (!this._loadConfig()) {
-            this.$configButton.classList.add("disabled");
-            return;
-        }
+        this.$logButton = this.$app.querySelector(".controller.logs");
 
-        this._setupModal();
+        this._setupConfig();
+        this._setupLogs()
     }
 
-    _loadConfig()
+    _setupConfig()
     {
         try {
             this.configFiles = JSON.parse(this.$app.dataset.config);
+            this.$configButton.classList.remove("disabled");
+            this._initializeConfigModal();
         } catch (e) {
-            return false;
         }
+    }
 
-        return true;
+    _setupLogs()
+    {
+        try {
+            this.logFiles = JSON.parse(this.$app.dataset.logs);
+            this.$logButton.classList.remove("disabled");
+            this._initialzeLogsModal();
+        } catch (e) {
+        }
     }
 
     _importCss()
@@ -45,28 +57,49 @@ class AppConfigController
         });
     }
 
-    _setupModal()
+    _initializeConfigModal()
     {
-        this.modal = new Modal({
+        this.configModal = new Modal({
             title: `${this.appName} Config`,
-            content: modalTemplate(this.appKey, this.configFiles),
-            onOpen: this._handleModalOpen.bind(this)
+            content: configModalTemplate(this.appKey, this.configFiles),
+            onOpen: this._handleConfigModalOpen.bind(this)
         });
 
         this.$configButton.onclick = () => {
-            this.modal.open();
+            console.log("click")
+            this.configModal.open();
+        };
+
+    }
+
+    _initialzeLogsModal()
+    {
+        this.logsModal = new Modal({
+            title: `${this.appName} Logs`,
+            content: logsModalTemplate(this.appKey, this.logFiles),
+            onOpen: this._handleLogsModalOpen.bind(this),
+            onClose: () => {
+                if (this.logSource) {
+                    this.logSource.close();
+                    this.logSource = null;
+                }
+            }
+        });
+
+        this.$logButton.onclick = () => {
+            this.logsModal.open();
         };
     }
 
-    _handleModalOpen()
+    _handleConfigModalOpen()
     {
-        let $back = this.modal.$body.querySelector("a.back");
-        let $configList = this.modal.$body.querySelector("div#config-list");
-        let $listEntries = $configList.querySelector("div.block-entry");
+        let $back = this.configModal.$body.querySelector("a.back");
+        let $configList = this.configModal.$body.querySelector("div.config-list");
+        let $listEntries = $configList.querySelectorAll("div.block-entry");
 
-        let $configLoading = this.modal.$body.querySelector("div#config-loading");
+        let $configLoading = this.configModal.$body.querySelector("div.config-loading");
 
-        let $configForm = this.modal.$body.querySelector("div#config-form");
+        let $configForm = this.configModal.$body.querySelector("div.config-form");
         let $formError = $configForm.querySelector(".error");
         let $formAlert = $configForm.querySelector(".alert");
         let $textArea = $configForm.querySelector("textarea");
@@ -77,7 +110,7 @@ class AppConfigController
             $configList.style.display    = "block";
         };
 
-        $listEntries.onclick = async e => {
+        $listEntries.forEach(element => element.onclick = async e => {
             const target = e.target.className === "block-entry" ? e.target : e.target.parentNode;
             const configKey = target.dataset.key;
 
@@ -120,6 +153,8 @@ class AppConfigController
                 }
 
                 $textArea.value = response.file;
+                $configForm.querySelector("h2").innerHTML = configKey;
+
                 $configLoading.style.display = "none";
                 $configForm.style.display    = "block";
             } catch (e) {
@@ -127,64 +162,182 @@ class AppConfigController
                 $configList.style.display    = "block";
                 console.error(e);
             }
+        });
+    }
+
+    _handleLogsModalOpen()
+    {
+        let $logLoading = this.logsModal.$body.querySelector("div.log-loading");
+
+        let $logWrapper = this.logsModal.$body.querySelector("div.log-wrapper");
+        let $logs = $logWrapper.querySelector("pre.logs");
+
+        let $back = this.logsModal.$body.querySelector("a.back");
+        let $logsList = this.logsModal.$body.querySelector("div.log-list");
+        let $listEntries = $logsList.querySelectorAll("div.block-entry");
+
+        $back.onclick = () => {
+            $logWrapper.style.display    = "none";
+            $logLoading.style.display = "none";
+            $logsList.style.display    = "block";
+
+            if (this.logSource) {
+                this.logSource.close();
+                this.logSource = null;
+            }
         };
+
+        $listEntries.forEach(element => element.onclick = async e => {
+            const target = e.target.className === "block-entry" ? e.target : e.target.parentNode;
+            const logKey = target.dataset.key;
+
+            $logs.innerHTML = "";
+
+            $logWrapper.style.display    = "none";
+            $logLoading.style.display = "block";
+            $logsList.style.display    = "none";
+
+            try {
+                this.logSource = new EventSource(`/api/apps/${this.appKey}/logs/${logKey}`);
+                this.logSource.addEventListener("message", e => {
+                    scrollToBottom($logs, () => {
+                        $logs.innerHTML += e.data;
+                    });
+                }, false);
+
+                this.logSource.onopen = () => {
+                    $logWrapper.querySelector("h2").innerHTML = logKey;
+
+                    $logLoading.style.display = "none";
+                    $logWrapper.style.display    = "block";
+                };
+                
+                this.logSource.onerror = () => {
+                    $logLoading.style.display = "none";
+                    $logsList.style.display    = "block";
+                    console.error(e);
+                };
+            } catch (e) {
+                $logLoading.style.display = "none";
+                $logsList.style.display    = "block";
+                console.error(e);
+            }
+        });
     }
 }
 
 /**
- * Build up a template for the modal based on the app config
+ * If the element is currently scrolled to the bottom it will reestablish that scroll position
+ * once the given closure is called
+ *
+ * @param DomElement element
+ * @param function fn
+ *
+ * @return void
+ */
+const scrollToBottom = (element, fn) => {
+    const scrollLeeway = 10;
+    let startingPosition = element.offsetHeight + element.scrollTop;
+    let startingScrollHeight = element.scrollHeight;
+
+    fn();
+
+    if (startingPosition + scrollLeeway >= startingScrollHeight) {
+        element.scrollTop = element.scrollHeight;
+    }
+};
+
+/**
+ * Build up a template for the config modal based on the app config
  *
  * @param string appKey
  * @param array configFiles
  *
  * @return string
  */
-const modalTemplate = (appKey, configFiles) => {
+const configModalTemplate = (appKey, configFiles) =>  `
+    <div class="app-config">
+        <div class="config-loading">Loading...</div>
+
+        <div class="config-list">
+            <h2>Server Configuration Files</h2>
+            <div class="error">
+                If you dont know what your doing please leave well enough alone
+                <br />
+                <br />
+                there is no validation on updating config and uploading an invalid file may
+                break the server.
+            </div>
+            <div class="block-list">
+                ${buildBlocks(configFiles)}
+            </div>
+        </div>
+
+        <div class="config-form">
+            <a href="javascript: void(0);" class="back">&lt; Back</a>
+            <h2></h2>
+            <form method="post">
+                <div class="error"></div>
+                <div class="alert"></div>
+
+                <div class="field">
+                    <label>Config Body</label>
+                    <textarea name="data" rows="16"></textarea>
+                </div>
+
+                <div class="group">
+                    <input type="submit" value="Update Config" />
+                </div>
+            </form>
+        </div>
+    </div>
+`;
+
+/**
+ * Build up a template for the config modal based on the app config
+ *
+ * @param string appKey
+ * @param array logFiles
+ *
+ * @return string
+ */
+const logsModalTemplate = (appKey, logFiles) =>  `
+    <div class="app-logs">
+        <div class="log-loading">Loading...</div>
+
+        <div class="log-list">
+            <h2>Server Logs</h2>
+            <div class="block-list">
+                ${buildBlocks(logFiles)}
+            </div>
+        </div>
+
+        <div class="log-wrapper">
+            <a href="javascript: void(0);" class="back">&lt; Back</a>
+            <h2></h2>
+            <pre class="logs"></pre>
+        </div>
+    </div>
+`;
+
+/**
+ * Build the blocks for the lists
+ *
+ * @param array entries
+ * 
+ * @return string
+ */
+const buildBlocks = entries => {
     let blocks = "";
-    for (let key in configFiles) {
+    for (let key in entries) {
         blocks += `
             <div class="block-entry" data-key="${key}">
                 ${key}
-                <div class="description">${configFiles[key]}</div>
+                <div class="description">${entries[key]}</div>
             </div>`;
     }
 
-    return `
-        <div id="app-config">
-            <div id="config-loading">Loading...</div>
-
-            <div id="config-list">
-                <h2>Server Configuration Files</h2>
-                <div class="error">
-                    If you dont know what your doing please leave well enough alone
-                    <br />
-                    <br />
-                    there is no validation on updating config and uploading an invalid file may
-                    break the server.
-                </div>
-                <div class="block-list">
-                    ${blocks}
-                </div>
-            </div>
-
-            <div id="config-form">
-                <a href="javascript: void(0);" class="back">&lt; Back</a>
-                <form method="post">
-                    <div class="error"></div>
-                    <div class="alert"></div>
-
-                    <div class="field">
-                        <label>Config Body</label>
-                        <textarea name="data" rows="16"></textarea>
-                    </div>
-
-                    <div class="group">
-                        <input type="submit" value="Update Config" />
-                    </div>
-                </form>
-            </div>
-        </div>
-    `;
+    return blocks;
 };
 
 export default AppConfigController;

@@ -16,7 +16,8 @@
     border-color: white;
 }
 
-#config-loading {
+.config-loading,
+.log-loading {
     display: none;
 
     text: center;
@@ -24,6 +25,16 @@
     margin-top: 30px;
 }
 
-#config-form {
+.config-form,
+.log-wrapper {
     display: none;
+}
+
+.log-wrapper pre.logs {
+    background: whitesmoke;
+    border: 1px solid black;
+    padding: 4px 8px;
+    height: 30vh;
+    overflow-y: auto;
+
 }

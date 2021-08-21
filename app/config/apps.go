@@ -85,6 +85,17 @@ func (app App) ConfigFiles() map[string]string {
 	return fileList
 }
 
+// LogFiles will return the keys for any log file/script defined on the application
+func (app App) LogFiles() map[string]string {
+	logList := make(map[string]string)
+
+	for key, info := range app.Logs {
+		logList[key] = info.Description
+	}
+
+	return logList
+}
+
 // Apps will get apps from cache
 //
 // populating the cache when necesarry

@@ -6,6 +6,7 @@
             class="serverStatus" 
             data-key="{{ $key }}" 
             data-config="{{ json $app.ConfigFiles }}"
+            data-logs="{{ json $app.LogFiles }}"
         >
             <div class="serverTitle">> {{ $app.Title }}</div>
 
@@ -26,8 +27,8 @@
             <div class="controls">
                 <div class="controller startStop">Stop</div>
                 <div class="controller restart">Restart</div>
-                <div class="controller config">Config</div>
-                <div class="controller logs">[Test]</div>
+                <div class="controller config disabled">Config</div>
+                <div class="controller logs disabled">Logs</div>
             </div>
         </div>
         <script type="module">
@@ -39,33 +40,6 @@
     {{ end }}
 
     <div class="clearfix"></div>
-
-    <!-- Begin Test -->
-    <script type="module">
-        import Modal from "/assets/js/modal.js";
-        let source;
-
-        const modal = new Modal({
-            title: "Log Test",
-            content: `<pre class="logs" style="max-height:50vh;overflow:auto;"></pre>`,
-            onOpen: function() {
-                let $logs = modal.$body.querySelector(".logs");
-
-                source = new EventSource("/api/apps/minecraft/logs/server.log");
-                source.addEventListener("message", e => {
-                    console.log("got data");
-                    $logs.innerHTML += e.data
-                }, false);
-            },
-            onClose: function() {
-                source.close();
-            }
-        });
-
-        document.querySelector(".controller.logs").onclick =  modal.open.bind(modal);
-    </script>
-
-    <!-- End Test -->
 </div>
 
 

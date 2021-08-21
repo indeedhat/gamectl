@@ -54,9 +54,11 @@ class Modal
     {
         this.$wrapper.style.display = "none";
 
-        if ("function" === typeof this.config.onClose) {
-            this.config.onClose();
-        }
+        setTimeout(() => {
+            if ("function" === typeof this.config.onClose) {
+                this.config.onClose();
+            }
+        }, 1);
     }
 
     _importCss()
