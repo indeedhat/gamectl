@@ -13,14 +13,18 @@ make run
 ## TODO
 - [ ] implement start/stop restart in frontend
 - [ ] implement status in frontend
+- [ ] activity monitor
+    - [ ] cpu
+    - [ ] memory
+    - [ ] network
 - [x] server logs
     - [x] add to config
     - [x] should be able to have multple log files/commands
     - [x] add websocket endpoint for streaming logs
         - ended up using http streams instead of web sockets
     - [x] add option to frontend (show in modal)
-- [ ] maybe add some unit testing
 - [x] reload app config
+- [ ] maybe add some unit testing
 - [ ] docker support
     - running this in docker would be a pain as it would require a companion app to run on the host to trigger\
       the scripts, it is possible and i may look into it

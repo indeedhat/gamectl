@@ -1,0 +1,5 @@
+network:
+  - wlan0
+  - enp61s0
+mount:
+  - /dev/nvme0n1p2

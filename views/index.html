@@ -47,5 +47,17 @@
     <div class="clearfix"></div>
 </div>
 
+<!-- Begin Test -->
+<script>
+    const stream = new EventSource("/api/performance");
+    stream.onopen = () => console.log("stream opened");
+    stream.onerror = e => console.error("stream error", e);
+    stream.addEventListener("message", e => {
+        console.log("got stream data", e.data);
+    })
+</script>
+window.onbeforeunload () => stream.close();
+<!-- End Test -->
+
 
 {{ end }}
