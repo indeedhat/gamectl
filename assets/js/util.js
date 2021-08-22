@@ -86,31 +86,28 @@ const duration = unix => {
     const minutes = Math.floor((unix % 3600) / 60);
     const seconds = Math.floor(unix % 60);
 
-    return `${days} days, ${hours} hours, ${minutes} minuts, ${seconds} seconds`;
+    return (days ? `${days} days,` : '')
+        + (hours ? `${hours} hours,` : '')
+        + (minutes ? `${minutes} minutes,` : '')
+        + `${seconds} seconds`;
+};
+
+const _size = (bytes, units) => {
+    if (bytes === 0) {
+        return `0 ${units[0]}`;
+    }
+
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+
+    return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${units[i]}`;
 };
 
 const fileSize = bytes => {
-    if (bytes === 0) return '0 Bytes';
-
-    const k = 1024;
-    const dm = 2;
-    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    return _size(bytes, ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB']);
 };
 
 const trafficSpeed = bytes => {
-    if (bytes === 0) return '0 bps';
-
-    const k = 1024;
-    const dm = 2;
-    const sizes = ['bps', 'kbs', 'mbs', 'gbs'];
-
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+    return _size(bytes, ['bps', 'kbs', 'mbs', 'gbs']);
 };
 
 export {

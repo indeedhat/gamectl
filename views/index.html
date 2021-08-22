@@ -129,7 +129,7 @@
             let mount = data.mount[k];
             mounts += `<div>
                 <strong>${k}</strong>:
-                ${fileSize(mount.total)} / ${fileSize(mount.used)}
+                ${fileSize(mount.used)} / ${fileSize(mount.total)}
             </div>
             `;
         }

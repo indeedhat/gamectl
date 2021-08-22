@@ -112,7 +112,7 @@ func mount(m *Monitor) (mounts map[string]UsageEntry) {
 		}
 
 		total := fs.Blocks * uint64(fs.Bsize)
-		free := fs.Bavail * uint64(fs.Bsize)
+		free := fs.Bfree * uint64(fs.Bsize)
 
 		mounts[mount] = UsageEntry{
 			Total: total,
