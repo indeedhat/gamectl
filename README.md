@@ -13,10 +13,10 @@ make run
 ## TODO
 - [ ] implement start/stop restart in frontend
 - [ ] implement status in frontend
-- [ ] activity monitor
-    - [ ] cpu
-    - [ ] memory
-    - [ ] network
+- [ ] game server requirements config
+    - i want to allow game server configs to be able to define the resources
+      they require, that way cc can make decisions on if multiple can run at once
+- [x] activity monitor
 - [x] server logs
     - [x] add to config
     - [x] should be able to have multple log files/commands
