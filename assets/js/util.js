@@ -80,10 +80,46 @@ const loadJs = src => {
     document.head.append(script);
 };
 
+const duration = unix => {
+    const days = Math.floor(unix / 86400);
+    const hours = Math.floor((unix % 86400) / 3600);
+    const minutes = Math.floor((unix % 3600) / 60);
+    const seconds = Math.floor(unix % 60);
+
+    return `${days} days, ${hours} hours, ${minutes} minuts, ${seconds} seconds`;
+};
+
+const fileSize = bytes => {
+    if (bytes === 0) return '0 Bytes';
+
+    const k = 1024;
+    const dm = 2;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+};
+
+const trafficSpeed = bytes => {
+    if (bytes === 0) return '0 bps';
+
+    const k = 1024;
+    const dm = 2;
+    const sizes = ['bps', 'kbs', 'mbs', 'gbs'];
+
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
+};
+
 export {
     once,
     html,
     objectToForm,
     loadCss,
-    loadJs
+    loadJs,
+    duration,
+    fileSize,
+    trafficSpeed
 };

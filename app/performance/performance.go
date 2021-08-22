@@ -5,7 +5,10 @@ import (
 	"io/ioutil"
 	"strconv"
 	"strings"
+	"syscall"
 	"time"
+
+	"github.com/indeedhat/command-center/app/config"
 )
 
 const (
@@ -39,10 +42,10 @@ type NetworkInterface struct {
 
 // Message will be serialised and passed via the http stream to the client
 type Message struct {
-	Uptime uint64             `json:"uptime"`
-	Memory UsageEntry         `json:"memory"`
-	Cpu    map[string]CpuCore `json:"cpu"`
-	// Mount   map[string]UsageEntry       `json:"mount"`
+	Uptime  uint64                      `json:"uptime"`
+	Memory  UsageEntry                  `json:"memory"`
+	Cpu     map[string]CpuCore          `json:"cpu"`
+	Mount   map[string]UsageEntry       `json:"mount"`
 	Network map[string]NetworkInterface `json:"network"`
 }
 
@@ -58,6 +61,7 @@ func (m Message) Json() (string, error) {
 
 type Monitor struct {
 	message Message
+	conf    *config.Performance
 }
 
 // GetMonitor will recieve the currently running monitor instance
@@ -67,7 +71,10 @@ func GetMonitor() *Monitor {
 
 // NewMonitor create a new Monitor instance and start it running
 func newMonitor() (*Monitor, error) {
-	monitor := &Monitor{}
+	conf, _ := config.LoadPerformanceConfig()
+	monitor := &Monitor{
+		conf: conf,
+	}
 
 	if err := monitor.run(); err != nil {
 		return nil, err
@@ -92,10 +99,10 @@ func (m *Monitor) run() error {
 func (m *Monitor) loop() {
 	for range time.NewTicker(time.Second * PollingInterval).C {
 		message := Message{
-			Uptime: m.uptime(),
-			Cpu:    m.cpu(),
-			Memory: m.memory(),
-			// Mount:    m.mount(),
+			Uptime:  m.uptime(),
+			Cpu:     m.cpu(),
+			Memory:  m.memory(),
+			Mount:   m.mount(),
 			Network: m.network(),
 		}
 
@@ -178,8 +185,34 @@ func (m *Monitor) memory() (memory UsageEntry) {
 	return
 }
 
-// func (m *Monitor) mount() (mounts map[string]UsageEntry) {
-// }
+// mount scans the drive mounts based on the configured whitelist
+// and returns their space stats
+func (m *Monitor) mount() (mounts map[string]UsageEntry) {
+	mounts = make(map[string]UsageEntry)
+
+	if m.conf == nil || len(m.conf.Mount) == 0 {
+		return
+	}
+
+	for _, mount := range m.conf.Mount {
+		fs := syscall.Statfs_t{}
+		err := syscall.Statfs(mount, &fs)
+		if err != nil {
+			mounts[mount] = UsageEntry{0, 0}
+			continue
+		}
+
+		total := fs.Blocks * uint64(fs.Bsize)
+		free := fs.Bfree * uint64(fs.Bsize)
+
+		mounts[mount] = UsageEntry{
+			Total: total,
+			Used:  total - free,
+		}
+	}
+
+	return
+}
 
 // network calculate the usage on each network interface since the last poll
 func (m *Monitor) network() (interfaces map[string]NetworkInterface) {
@@ -198,6 +231,10 @@ func (m *Monitor) network() (interfaces map[string]NetworkInterface) {
 		fields := strings.Fields(line)
 		name := strings.Trim(strings.Split(line, ":")[0], " ")
 
+		if m.skipNetworkInterface(name) {
+			continue
+		}
+
 		rx, _ := strconv.ParseUint(fields[1], 10, 64)
 		tx, _ := strconv.ParseUint(fields[9], 10, 64)
 
@@ -215,4 +252,20 @@ func (m *Monitor) network() (interfaces map[string]NetworkInterface) {
 	}
 
 	return
+}
+
+// skipNetworkInterface check the network interface name against the whitelist
+// and see if it should be skipped or not
+func (m *Monitor) skipNetworkInterface(name string) bool {
+	if m.conf == nil {
+		return false
+	}
+
+	for _, tracked := range m.conf.Network {
+		if name == tracked {
+			return false
+		}
+	}
+
+	return true
 }
