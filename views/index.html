@@ -82,10 +82,21 @@
         let uptime = e.data.uptime
         let data = JSON.parse(e.data);
 
+        let sortedCpuCores = Object.keys(data.cpu).sort((a, b) => {
+            if (a.length > b.length) {
+                return 1;
+            }
+
+            return a > b ? 1 : 0;
+        }).reduce((obj, key) => {
+            obj[key] = data.cpu[key]
+            return obj;
+        }, {})
+
         let cpu = "";
         let total = 0;
         let idle = 0;
-        for (let k in data.cpu) {
+        for (let k in sortedCpuCores) {
             let core = data.cpu[k];
             total += core.total;
             idle += core.idle;
