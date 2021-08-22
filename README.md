@@ -20,7 +20,7 @@ make run
         - ended up using http streams instead of web sockets
     - [x] add option to frontend (show in modal)
 - [ ] maybe add some unit testing
-- [ ] reload app config
+- [x] reload app config
 - [ ] docker support
     - running this in docker would be a pain as it would require a companion app to run on the host to trigger\
       the scripts, it is possible and i may look into it

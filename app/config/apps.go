@@ -124,7 +124,7 @@ func GepApp(key string) *App {
 
 // ReloadAppConfig from the yaml files in the config directory
 func ReloadAppConfig() error {
-	appCache = make(map[string]App)
+	appConfig := make(map[string]App)
 
 	files, err := filepath.Glob(ConfigDirectoryPattern)
 	if err != nil {
@@ -143,9 +143,10 @@ func ReloadAppConfig() error {
 			return err
 		}
 
-		appCache[appKey(file)] = app
+		appConfig[appKey(file)] = app
 	}
 
+	appCache = appConfig
 	return nil
 }
 

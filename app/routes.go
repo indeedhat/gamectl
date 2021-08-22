@@ -61,6 +61,8 @@ func BuildRoutes() *gin.Engine {
 
 		rootAdmin.GET("/users/create", controllers.CreateUserController)
 		rootAdmin.POST("/users/create", controllers.CreateUserController)
+
+		rootAdmin.GET("/system/reload", controllers.ReloadAppConfig)
 	}
 
 	return router
