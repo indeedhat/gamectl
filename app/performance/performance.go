@@ -140,7 +140,7 @@ func (m *Monitor) cpu() (cores map[string]CpuCore) {
 
 			core.Total += val
 
-			if 4 == i {
+			if 3 == i {
 				core.Idle = val
 			}
 		}
