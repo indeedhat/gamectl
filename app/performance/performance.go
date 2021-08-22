@@ -17,11 +17,13 @@ const (
 
 var (
 	networkIntfCache map[string]NetworkInterface
+	cpuTickCache     map[string]CpuCore
 	monitorCache     *Monitor
 )
 
 func init() {
 	networkIntfCache = make(map[string]NetworkInterface)
+	cpuTickCache = make(map[string]CpuCore)
 	monitorCache, _ = newMonitor()
 }
 
@@ -123,41 +125,6 @@ func (m *Monitor) uptime() (uptime uint64) {
 	return
 }
 
-// cpu calculate the current usage of the cpu cores
-func (m *Monitor) cpu() (cores map[string]CpuCore) {
-	cores = make(map[string]CpuCore)
-
-	contents, err := ioutil.ReadFile("/proc/stat")
-	if nil != err {
-		return
-	}
-
-	lines := strings.Split(string(contents), "\n")
-
-	for _, line := range lines {
-		fields := strings.Fields(line)
-
-		if len(fields) == 0 || "cpu" == fields[0] || !strings.HasPrefix(fields[0], "cpu") {
-			continue
-		}
-
-		core := CpuCore{}
-		for i, field := range fields[1:] {
-			val, _ := strconv.ParseUint(field, 10, 64)
-
-			core.Total += val
-
-			if 3 == i {
-				core.Idle = val
-			}
-		}
-
-		cores[fields[0]] = core
-	}
-
-	return
-}
-
 // memory check the current memory usage
 func (m *Monitor) memory() (memory UsageEntry) {
 	contents, err := ioutil.ReadFile("/proc/meminfo")
@@ -214,6 +181,50 @@ func (m *Monitor) mount() (mounts map[string]UsageEntry) {
 	return
 }
 
+// cpu calculate the current usage of the cpu cores
+func (m *Monitor) cpu() (cores map[string]CpuCore) {
+	cores = make(map[string]CpuCore)
+
+	contents, err := ioutil.ReadFile("/proc/stat")
+	if nil != err {
+		return
+	}
+
+	for _, line := range strings.Split(string(contents), "\n") {
+		fields := strings.Fields(line)
+
+		if len(fields) == 0 || "cpu" == fields[0] || !strings.HasPrefix(fields[0], "cpu") {
+			continue
+		}
+
+		core := CpuCore{}
+		for i, field := range fields[1:] {
+			val, _ := strconv.ParseUint(field, 10, 64)
+
+			core.Total += val
+
+			if 3 == i {
+				core.Idle = val
+			}
+		}
+
+		if _, ok := cpuTickCache[fields[0]]; !ok {
+			cpuTickCache[fields[0]] = CpuCore{core.Total, core.Idle}
+		}
+
+		prev := cpuTickCache[fields[0]]
+
+		cores[fields[0]] = CpuCore{
+			Total: (core.Total - prev.Total) / PollingInterval,
+			Idle:  (core.Idle - prev.Idle) / PollingInterval,
+		}
+
+		cpuTickCache[fields[0]] = core
+	}
+
+	return
+}
+
 // network calculate the usage on each network interface since the last poll
 func (m *Monitor) network() (interfaces map[string]NetworkInterface) {
 	interfaces = make(map[string]NetworkInterface)
@@ -240,7 +251,6 @@ func (m *Monitor) network() (interfaces map[string]NetworkInterface) {
 
 		if _, ok := networkIntfCache[name]; !ok {
 			networkIntfCache[name] = NetworkInterface{rx, tx}
-
 		}
 
 		interfaces[name] = NetworkInterface{

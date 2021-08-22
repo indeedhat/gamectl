@@ -12,9 +12,23 @@
             <br />
             HELP!
         </div>
-        <div class="data">
+        <div class="data" style="border: 2px solid black;">
+            <table>
+                <tr>
+                    <td>Loading System Stats...</td>
+                </tr>
+            </table>
         </div>
+        <style>
+            #system .data td,
+            #system .data th {
+                background-color: white;
+                padding: 4px;
+                margin: 4px;
+            }
+        </style>
     </div>
+
     {{ range $key, $app := .apps }}
         <div 
             class="serverStatus" 
@@ -64,20 +78,29 @@
     stream.onopen = () => console.log("stream opened");
     stream.onerror = e => console.error("stream error", e);
 
-
     stream.addEventListener("message", e => {
         let uptime = e.data.uptime
         let data = JSON.parse(e.data);
 
         let cpu = "";
+        let total = 0;
+        let idle = 0;
         for (let k in data.cpu) {
             let core = data.cpu[k];
+            total += core.total;
+            idle += core.idle;
+
             cpu += `<div style="width:300px;display: inline-block">
                 <strong>${k}</strong>:
-                    %${(100 / core.total * (core.total - core.idle)).toFixed(2)}
+                    ${(100 / core.total * (core.total - core.idle)).toFixed(2)}%
                 </div>
             `;
         }
+        cpu = `<div>
+            <strong>Total</strong>: ${(100 / total * (total - idle)).toFixed(2)}%
+        </div>
+        ${cpu}
+        `;
 
         let network = "";
         for (let k in data.network) {
