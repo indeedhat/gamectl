@@ -73,7 +73,7 @@
         for (let k in data.cpu) {
             let core = data.cpu[k];
             cpu += `<div style="width:300px;display: inline-block">
-                <strong>${k}</strong>
+                <strong>${k}</strong>:
                     %${(100 / core.total * (core.total - core.idle)).toFixed(2)}
                 </div>
             `;
@@ -83,7 +83,7 @@
         for (let k in data.network) {
             let intf = data.network[k];
             network += `<div>
-                <strong>${k}</strong>
+                <strong>${k}</strong>:
                     Rx: ${trafficSpeed(intf.rx)}
                     Tx: ${trafficSpeed(intf.tx)}
                 </div>
@@ -94,8 +94,8 @@
         for (let k in data.mount) {
             let mount = data.mount[k];
             mounts += `<div>
-                <strong>${k}</strong>
-                %${100 / mount.total * mount.used}
+                <strong>${k}</strong>:
+                ${fileSize(mount.total)} / ${fileSize(mount.used)}
             </div>
             `;
         }
