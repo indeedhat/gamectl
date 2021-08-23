@@ -1,4 +1,4 @@
-import { once, html, loadCss, loadJs } from "/assets/js/util.js";
+import { once, html, loadCss, loadJs, escape } from "/assets/js/util.js";
 import { get, post } from "/assets/js/request.js";
 import { Modal } from "/assets/js/modal.js";
 
@@ -248,7 +248,7 @@ class AppConfigController
                 this.logSource = new EventSource(`/api/apps/${this.appKey}/logs/${logKey}`);
                 this.logSource.addEventListener("message", e => {
                     scrollToBottom($logs, () => {
-                        $logs.innerHTML += e.data;
+                        $logs.innerHTML += escape(e.data);
                     });
                 }, false);
 
@@ -256,10 +256,12 @@ class AppConfigController
                     $logWrapper.querySelector("h2").innerHTML = logKey;
 
                     $logLoading.style.display = "none";
+                    $logsList.style.display   = "none";
                     $logWrapper.style.display = "block";
+                    $logs.innerHTML = "";
                 };
                 
-                this.logSource.onerror = () => {
+                this.logSource.onerror = e => {
                     $logWrapper.style.display = "none";
                     $logLoading.style.display = "none";
                     $logsList.style.display   = "block";

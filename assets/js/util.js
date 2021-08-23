@@ -114,6 +114,12 @@ const percentage = (total, amount, decimals = 2) => {
     return (100 / total * amount).toFixed(decimals) + "%";
 };
 
+const escape = str => {
+  let div = document.createElement('div');
+  div.appendChild(document.createTextNode(str));
+  return div.innerHTML;
+};
+
 export {
     once,
     html,
@@ -123,5 +129,6 @@ export {
     duration,
     fileSize,
     trafficSpeed,
-    percentage
+    percentage,
+    escape
 };
