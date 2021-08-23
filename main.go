@@ -2,6 +2,7 @@ package main
 
 import (
 	"log"
+	"os"
 
 	"github.com/indeedhat/gamectl/app"
 	"github.com/indeedhat/gamectl/app/config"
@@ -32,7 +33,7 @@ func main() {
 
 	router := app.BuildRoutes()
 
-	if err := router.Run(); err != nil {
+	if err := router.Run(os.Getenv("GIN_PORT")); err != nil {
 		log.Fatalf("Run failed: %s", err)
 	}
 }
