@@ -3,6 +3,7 @@ package api
 import (
 	"io"
 	"net/http"
+	"time"
 
 	"github.com/indeedhat/gamectl/app/config"
 
@@ -33,12 +34,17 @@ func LogStreamController(ctx *gin.Context) {
 		return
 	}
 
+	keepAlive := time.NewTicker(time.Second * 55)
 	clientDisconnected := ctx.Writer.CloseNotify()
 	ctx.Stream(func(writer io.Writer) bool {
 		select {
 		case <-clientDisconnected:
 			done <- true
 			return false
+
+		case <-keepAlive.C:
+			ctx.SSEvent("keep-alive", true)
+			return true
 
 		case data := <-logUpdated:
 			ctx.SSEvent("message", data)

@@ -252,6 +252,10 @@ class AppConfigController
                     });
                 }, false);
 
+                this.logSource.addEventListener("keep-alive", e => {
+                    cosole.log(`keep-alive: ${logKey}`);
+                }, false);
+
                 this.logSource.onopen = () => {
                     $logWrapper.querySelector("h2").innerHTML = logKey;
 
