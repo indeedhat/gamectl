@@ -1,4 +1,4 @@
-module github.com/indeedhat/command-center
+module github.com/indeedhat/gamectl
 
 go 1.16
 
