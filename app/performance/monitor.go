@@ -7,7 +7,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/indeedhat/command-center/app/config"
+	"github.com/indeedhat/gamectl/app/config"
 )
 
 type Monitor struct {

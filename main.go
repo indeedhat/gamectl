@@ -3,10 +3,10 @@ package main
 import (
 	"log"
 
-	"github.com/indeedhat/command-center/app"
-	"github.com/indeedhat/command-center/app/config"
-	"github.com/indeedhat/command-center/app/models"
-	"github.com/indeedhat/command-center/app/performance"
+	"github.com/indeedhat/gamectl/app"
+	"github.com/indeedhat/gamectl/app/config"
+	"github.com/indeedhat/gamectl/app/models"
+	"github.com/indeedhat/gamectl/app/performance"
 )
 
 func main() {

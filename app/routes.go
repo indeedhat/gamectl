@@ -10,9 +10,9 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/memstore"
-	"github.com/indeedhat/command-center/app/controllers"
-	"github.com/indeedhat/command-center/app/controllers/api"
-	"github.com/indeedhat/command-center/app/middleware"
+	"github.com/indeedhat/gamectl/app/controllers"
+	"github.com/indeedhat/gamectl/app/controllers/api"
+	"github.com/indeedhat/gamectl/app/middleware"
 
 	"github.com/gin-gonic/gin"
 )

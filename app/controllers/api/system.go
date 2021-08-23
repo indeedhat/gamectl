@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/indeedhat/command-center/app/performance"
+	"github.com/indeedhat/gamectl/app/performance"
 )
 
 // LogStreamController setups up persistant connection that it uses to send log updates to the client

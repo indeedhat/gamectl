@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/indeedhat/command-center/app/config"
+	"github.com/indeedhat/gamectl/app/config"
 
 	"github.com/gin-gonic/gin"
 )
