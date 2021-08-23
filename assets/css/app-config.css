@@ -36,5 +36,6 @@
     padding: 4px 8px;
     height: 30vh;
     overflow-y: auto;
-
+    max-width: 80vw;
+    white-space: break-space;
 }
