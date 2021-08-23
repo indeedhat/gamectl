@@ -110,6 +110,10 @@ const trafficSpeed = bytes => {
     return _size(bytes, ['bps', 'kbs', 'mbs', 'gbs']);
 };
 
+const percentage = (total, amount, decimals = 2) => {
+    return (100 / total * amount).toFixed(decimals) + "%";
+};
+
 export {
     once,
     html,
@@ -118,5 +122,6 @@ export {
     loadJs,
     duration,
     fileSize,
-    trafficSpeed
+    trafficSpeed,
+    percentage
 };

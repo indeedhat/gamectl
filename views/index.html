@@ -6,28 +6,18 @@
 
 <div class="bodyTitle">> Main Controls</div>
 <div class="body">
-    <div id="system">
+    <div id="resource-monitor">
         <div class="error">
             Kag, this really needs making pretty
             <br />
             HELP!
         </div>
-        <div class="data" style="border: 2px solid black;">
-            <table>
-                <tr>
-                    <td>Loading System Stats...</td>
-                </tr>
-            </table>
-        </div>
-        <style>
-            #system .data td,
-            #system .data th {
-                background-color: white;
-                padding: 4px;
-                margin: 4px;
-            }
-        </style>
+        <div class="data"></div>
     </div>
+    <script type="module">
+        import ResourceMonitor from '/assets/js/resource-monitor.js';
+        new ResourceMonitor("#resource-monitor");
+    </script>
 
     {{ range $key, $app := .apps }}
         <div 
@@ -61,9 +51,9 @@
         </div>
         <script type="module">
             import AppConfig from '/assets/js/app-config.js';
-
             new AppConfig('{{ $app.Title }}', '{{ $key }}');
         </script>
+
         <script>update_css()</script>
     {{ end }}
 
@@ -71,97 +61,7 @@
 </div>
 
 <!-- Begin Test -->
-<script type="module">
-    import { duration, fileSize, trafficSpeed } from "/assets/js/util.js";
 
-    const stream = new EventSource("/api/performance");
-    stream.onopen = () => console.log("stream opened");
-    stream.onerror = e => console.error("stream error", e);
-
-    stream.addEventListener("message", e => {
-        let uptime = e.data.uptime
-        let data = JSON.parse(e.data);
-
-        let sortedCpuCores = Object.keys(data.cpu).sort((a, b) => {
-            if (a.length > b.length) {
-                return 1;
-            }
-
-            return a > b ? 1 : 0;
-        }).reduce((obj, key) => {
-            obj[key] = data.cpu[key]
-            return obj;
-        }, {})
-
-        let cpu = "";
-        let total = 0;
-        let idle = 0;
-        for (let k in sortedCpuCores) {
-            let core = data.cpu[k];
-            total += core.total;
-            idle += core.idle;
-
-            cpu += `<div style="width:300px;display: inline-block">
-                <strong>${k}</strong>:
-                    ${(100 / core.total * (core.total - core.idle)).toFixed(2)}%
-                </div>
-            `;
-        }
-        cpu = `<div>
-            <strong>Total</strong>: ${(100 / total * (total - idle)).toFixed(2)}%
-        </div>
-        ${cpu}
-        `;
-
-        let network = "";
-        for (let k in data.network) {
-            let intf = data.network[k];
-            network += `<div>
-                <strong>${k}</strong>:
-                    Rx: ${trafficSpeed(intf.rx)}
-                    Tx: ${trafficSpeed(intf.tx)}
-                </div>
-            `;
-        }
-
-        let mounts = "";
-        for (let k in data.mount) {
-            let mount = data.mount[k];
-            mounts += `<div>
-                <strong>${k}</strong>:
-                ${fileSize(mount.used)} / ${fileSize(mount.total)}
-            </div>
-            `;
-        }
-
-        document.querySelector("#system .data").innerHTML = `
-            <table>
-                <tr>
-                    <th>Uptime</th>
-                    <td>${duration(data.uptime)}</td>
-                </tr>
-                <tr>
-                    <th>Memory</th>
-                    <td>${fileSize(data.memory.used)} / ${fileSize(data.memory.total)}</td>
-                </tr>
-                <tr>
-                    <th>CPU</th>
-                    <td>${cpu}</td>
-                </tr>
-                <tr>
-                    <th>Network</th>
-                    <td>${network}</td>
-                </tr>
-                <tr>
-                    <th>Disk</th>
-                    <td>${mounts}</td>
-                </tr>
-            </table>
-        `;
-    })
-
-    window.onbeforeunload = () => stream.close();
-</script>
 <!-- End Test -->
 
 

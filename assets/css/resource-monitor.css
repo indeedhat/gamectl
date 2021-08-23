@@ -1,0 +1,30 @@
+#resource-monitor .data {
+    border: 2px solid black;
+}
+
+#resource-monitor .data td,
+#resource-monitor .data th {
+    background-color: white;
+    padding: 4px;
+    margin: 4px;
+}
+
+#resource-monitor .core {
+    width: 24%;
+    min-width: 150px;
+    display: inline-block;
+}
+
+#resource-monitor .intf > * {
+    display: inline-block;
+    width: 150px;
+}
+
+#resource-monitor .intf > strong {
+    width: 80px;
+}
+
+#resource-monitor .mnt > * {
+    display: inline-block;
+    min-width: 80px;
+}
