@@ -253,7 +253,7 @@ class AppConfigController
                 }, false);
 
                 this.logSource.addEventListener("keep-alive", e => {
-                    cosole.log(`keep-alive: ${logKey}`);
+                    console.log(`keep-alive: ${logKey}`);
                 }, false);
 
                 this.logSource.onopen = () => {
