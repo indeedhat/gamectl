@@ -39,7 +39,6 @@ class ResourceMonitor
         this._stream.addEventListener("message", this._handleMessage.bind(this));
     }
 
-
     _handleError(e)
     {
         console.error("Resource Monitor:", e);
@@ -49,7 +48,6 @@ class ResourceMonitor
     {
         this.$data.innerHTML = buildTemplate(JSON.parse(data));
     }
-
 }
 
 const loadingTemplate = () => {

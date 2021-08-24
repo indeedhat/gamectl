@@ -86,10 +86,22 @@ const duration = unix => {
     const minutes = Math.floor((unix % 3600) / 60);
     const seconds = Math.floor(unix % 60);
 
-    return (days ? `${days} days,` : '')
-        + (hours ? `${hours} hours,` : '')
-        + (minutes ? `${minutes} minutes,` : '')
+    return (days ? `${days} days, ` : '')
+        + (hours ? `${hours} hours, ` : '')
+        + (minutes ? `${minutes} minutes, ` : '')
         + `${seconds} seconds`;
+};
+
+const minDuration = unix => {
+    const days = Math.floor(unix / 86400);
+    const hours = Math.floor((unix % 86400) / 3600);
+    const minutes = Math.floor((unix % 3600) / 60);
+    const seconds = Math.floor(unix % 60);
+
+    return (days ? `${days}d, ` : '')
+        + (hours ? `${hours}h, ` : '')
+        + (minutes ? `${minutes}m, ` : '')
+        + `${seconds}s`;
 };
 
 const _size = (bytes, units) => {
@@ -126,6 +138,7 @@ export {
     objectToForm,
     loadCss,
     loadJs,
+    minDuration,
     duration,
     fileSize,
     trafficSpeed,
