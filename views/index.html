@@ -71,7 +71,7 @@
 
                 $status.innerHTML = json.status.online ? "Online" : "Offline";
                 $players.querySelector(".current").innerHTML = json.status.users;
-                $uptime.innerHTML = duration(json.status.uptime);
+                $uptime.innerHTML = minDuration(json.status.uptime);
             };
 
             getStatus();
