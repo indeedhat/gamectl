@@ -58,7 +58,7 @@
 
             const appKey = '{{ $key }}';
 
-            const $app = document.querySelector(`.serverStatus[data-key=${appKey}]`);
+            const $app = document.querySelector(`.serverStatus[data-key='${appKey}']`);
             const $status = $app.querySelector(".dataTile.status");
             const $players = $app.querySelector(".dataTile.players");
             const $uptime = $app.querySelector(".dataTile.uptime");
