@@ -172,3 +172,7 @@ div.alert {
     font-weight: bold;
     text-align: center;
 }
+
+progress.sysBar{
+    width:100%;
+}
