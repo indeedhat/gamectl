@@ -1,2 +1,8 @@
 import { once, loadJs } from '/assets/js/util.js';
-h
+
+once(
+    "js-downloader", 
+    () => loadJs("/assets/js/lib/js-file-downloader.min.js")
+);
+
+
