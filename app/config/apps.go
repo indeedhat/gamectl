@@ -18,9 +18,13 @@ var appCache map[string]App
 
 // AppStatus
 type AppStatus struct {
-	Online    bool  `json:"online"`
-	UserCount uint8 `json:"users"`
-	Uptime    uint  `json:"uptime"`
+	Online    bool `json:"online"`
+	UserCount int8 `json:"users"`
+	Uptime    uint `json:"uptime"`
+	Extra     []struct {
+		Name  string `json:"name"`
+		Value string `json:"value"`
+	} `json:"extra"`
 }
 
 // App configuration

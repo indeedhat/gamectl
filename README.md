@@ -13,6 +13,7 @@ make run
 ## TODO
 - [ ] implement start/stop restart in frontend
 - [ ] implement status in frontend
+- [ ] world backups
 - [ ] game server requirements config
     - i want to allow game server configs to be able to define the resources
       they require, that way cc can make decisions on if multiple can run at once

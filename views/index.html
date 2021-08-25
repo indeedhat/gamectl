@@ -34,7 +34,7 @@
 
                 <div class="dataTile playersLabel">Players :</div>  
                 <div class="dataTile players" > 
-                Fixme/Fixme
+                    <span class="current">Fixme</span>/<span class="max">{{ $app.MaxPlayers }}</span>
                 </div>
 
                 <div class="dataTile uptimeLabel">Uptime  :</div>  
@@ -50,8 +50,32 @@
             </div>
         </div>
         <script type="module">
+            import { get, post } from "/assets/js/request.js";
+            import { minDuration } from "/assets/js/util.js";
             import AppConfig from '/assets/js/app-config.js';
+
             new AppConfig('{{ $app.Title }}', '{{ $key }}');
+
+            const appKey = '{{ $key }}';
+
+            const $app = document.querySelector(`.serverStatus[data-key='${appKey}']`);
+            const $status = $app.querySelector(".dataTile.status");
+            const $players = $app.querySelector(".dataTile.players");
+            const $uptime = $app.querySelector(".dataTile.uptime");
+
+            const getStatus = async () => {
+                let [code, json] = await get(`/api/apps/${appKey}`)
+                if (!json.outcome) {
+                    return;
+                }
+
+                $status.innerHTML = json.status.online ? "Online" : "Offline";
+                $players.querySelector(".current").innerHTML = json.status.users;
+                $uptime.innerHTML = minDuration(json.status.uptime);
+            };
+
+            getStatus();
+            setTimeout(getStatus, 60000)
         </script>
 
         <script>update_css()</script>
