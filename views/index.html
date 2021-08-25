@@ -82,12 +82,18 @@
                 }
 
                 if (json.status.online) {
+                    $status.classList.add("online");
+                    $status.classList.remove("offline");
+
                     $startStopButton.innerHTML = "Stop";
                     $startStopButton.onclick = stopServer;
 
                     $restartButton.removeAttribute("disabled");
                     $restartButton.onclick = restartServer;
                 } else {
+                    $status.classList.remove("online");
+                    $status.classList.add("offline");
+
                     $startStopButton.innerHTML = "Start";
                     $startStopButton.onclick = startServer;
 
