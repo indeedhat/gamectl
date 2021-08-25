@@ -1,7 +1,11 @@
 package config
 
 import (
+	"archive/zip"
 	"encoding/json"
+	"errors"
+	"fmt"
+	"io"
 	"io/ioutil"
 	"os"
 	"os/exec"
@@ -15,6 +19,11 @@ import (
 const ConfigDirectoryPattern = "./config/*.app.yml"
 
 var appCache map[string]App
+
+var (
+	ErrBadExtension         = errors.New("Extension must be .zip")
+	ErrWorldDirectoryNotSet = errors.New("World Directory not set")
+)
 
 // AppStatus
 type AppStatus struct {
@@ -33,6 +42,8 @@ type App struct {
 	Description string
 	Icon        string
 	MaxPlayers  string `yaml:"maxPlayers"`
+
+	WorldDirectory string `yaml:"worldDirectory"`
 
 	Commands struct {
 		Status string
@@ -104,6 +115,70 @@ func (app App) LogFiles() map[string]string {
 	return logList
 }
 
+// BackupWorldDirectory will generate a new zip file in the .temp directory from the sourceDirecotry
+//
+// on success it will return the relative path to the archive (including the .temp/ prefix
+//
+// I know that this would run a lot faster if i wrote the archive to memory given that im just going to be
+// reading it back out again for the download but as this tool is designed to be run on low end vps's
+// memory is likely to be at a premium and thus i prefer this solution
+func (app App) BackupWorldDirectory(name string) (string, error) {
+	if app.WorldDirectory == "" {
+		return "", ErrWorldDirectoryNotSet
+	}
+
+	destinationFile := fmt.Sprintf("%s.zip", name)
+	extension := path.Ext(destinationFile)
+
+	if extension != ".zip" {
+		return "", ErrBadExtension
+	}
+
+	archivePath := path.Join(os.Getenv("TEMP_DIR"), destinationFile)
+	outputFile, err := os.Create(archivePath)
+	if err != nil {
+		return "", err
+	}
+	defer outputFile.Close()
+
+	writer := zip.NewWriter(outputFile)
+	defer writer.Close()
+
+	if err = filepath.Walk(app.WorldDirectory, buildRecursiveFileWalker(app.WorldDirectory, writer)); err != nil {
+		return "", err
+	}
+
+	return archivePath, nil
+}
+
+// buildRecursiveFileWalker creates the file walker specifically for use by the BackupWorldDirectory function
+func buildRecursiveFileWalker(sourceDirectory string, writer *zip.Writer) filepath.WalkFunc {
+	return func(path string, info os.FileInfo, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if info.IsDir() {
+			return nil
+		}
+
+		sourceFile, err := os.Open(path)
+		if err != nil {
+			return err
+		}
+		defer sourceFile.Close()
+
+		destFile, err := writer.Create(strings.TrimPrefix(path, sourceDirectory))
+		if err != nil {
+			return err
+		}
+
+		_, err = io.Copy(destFile, sourceFile)
+
+		return err
+	}
+}
+
 // Apps will get apps from cache
 //
 // populating the cache when necesarry
@@ -116,7 +191,7 @@ func Apps() *map[string]App {
 }
 
 // GetApp will get an app by its key
-func GepApp(key string) *App {
+func GetApp(key string) *App {
 	apps := Apps()
 	app, ok := (*apps)[key]
 	if !ok {

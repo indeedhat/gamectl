@@ -18,7 +18,7 @@ func LoadAppConfig(ctx *gin.Context) {
 	appKey := ctx.Param("app_key")
 	configKey := ctx.Param("config_key")
 
-	app := config.GepApp(appKey)
+	app := config.GetApp(appKey)
 	if app == nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
@@ -53,7 +53,7 @@ func SaveAppConfig(ctx *gin.Context) {
 		return
 	}
 
-	app := config.GepApp(appKey)
+	app := config.GetApp(appKey)
 	if app == nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return

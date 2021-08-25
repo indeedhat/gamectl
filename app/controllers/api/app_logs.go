@@ -15,7 +15,7 @@ func LogStreamController(ctx *gin.Context) {
 	appKey := ctx.Param("app_key")
 	logKey := ctx.Param("log_key")
 
-	app := config.GepApp(appKey)
+	app := config.GetApp(appKey)
 	if app == nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return

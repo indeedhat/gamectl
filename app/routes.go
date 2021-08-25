@@ -47,6 +47,7 @@ func BuildRoutes() *gin.Engine {
 		private.POST("/api/apps/:app_key/start", api.StartAppController)
 		private.POST("/api/apps/:app_key/stop", api.StopAppController)
 		private.POST("/api/apps/:app_key/restart", api.RestartAppController)
+		private.GET("/api/apps/:app_key/download", api.DownloadAppWorldController)
 
 		private.GET("/api/apps/:app_key/config/:config_key", api.LoadAppConfig)
 		private.POST("/api/apps/:app_key/config/:config_key", api.SaveAppConfig)

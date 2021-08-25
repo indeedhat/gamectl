@@ -1,7 +1,12 @@
 package api
 
 import (
+	"fmt"
+	"log"
 	"net/http"
+	"os"
+	"path"
+	"time"
 
 	"github.com/indeedhat/gamectl/app/config"
 
@@ -12,7 +17,7 @@ import (
 func StartAppController(ctx *gin.Context) {
 	appKey := ctx.Param("app_key")
 
-	app := config.GepApp(appKey)
+	app := config.GetApp(appKey)
 	if app == nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
@@ -30,7 +35,7 @@ func StartAppController(ctx *gin.Context) {
 func StopAppController(ctx *gin.Context) {
 	appKey := ctx.Param("app_key")
 
-	app := config.GepApp(appKey)
+	app := config.GetApp(appKey)
 	if app == nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
@@ -50,7 +55,7 @@ func StopAppController(ctx *gin.Context) {
 func RestartAppController(ctx *gin.Context) {
 	appKey := ctx.Param("app_key")
 
-	app := config.GepApp(appKey)
+	app := config.GetApp(appKey)
 	if app == nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
@@ -71,7 +76,7 @@ func RestartAppController(ctx *gin.Context) {
 func GetAppStatusController(ctx *gin.Context) {
 	appKey := ctx.Param("app_key")
 
-	app := config.GepApp(appKey)
+	app := config.GetApp(appKey)
 	if app == nil {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
@@ -87,4 +92,52 @@ func GetAppStatusController(ctx *gin.Context) {
 		"outcome": true,
 		"status":  status,
 	})
+}
+
+// DownloadAppWorldController will attempt to back up the game world for an app and send the resulting zip
+// archive to the client
+//
+// In order to have the best chance at a successful backup it will first stop the server if it is running
+// in cases where the server is stopped it will then be started again upon download complete
+func DownloadAppWorldController(ctx *gin.Context) {
+	appKey := ctx.Param("app_key")
+
+	app := config.GetApp(appKey)
+	if app == nil || app.WorldDirectory == "" {
+		log.Print("no direcotry")
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	status, err := app.Status()
+	if err != nil {
+		log.Print("app status failed")
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	if status.Online {
+		if err := app.Stop(); err != nil {
+			log.Print("failed to stop server")
+			ctx.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+
+		defer app.Start()
+	}
+
+	archivePath, err := app.BackupWorldDirectory(appKey)
+	if err != nil {
+		log.Print("archive failed", err)
+		ctx.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+	defer os.Remove(archivePath)
+
+	ctx.Header(
+		"Content-Disposition",
+		fmt.Sprintf("attachment; filename=\"%s-%s.zip\"", path.Base(archivePath), time.Now().Format("06-01-02")),
+	)
+	ctx.File(archivePath)
+
 }
