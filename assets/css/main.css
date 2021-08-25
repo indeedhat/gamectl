@@ -44,6 +44,7 @@ div.bodyTitle{
 
 div.sysStatus{
     width:100%;
+    background-color:rgb(0,0,0);
 }
 div.sysItem{
     width:90%;
@@ -56,17 +57,27 @@ div.sysLabel{
     float:left;
     height:auto;
     color:rgb(255,255,255);
-    background-color:rgb(0,0,0);
     text-align: center;
+
 }
 
 div.sysData{
-
+    border-left:rgb(255,255,255);
+    border-left-style:solid;
+    border-left-width:1px;
     width:90%;
     float:left;
     color:rgb(255,255,255);
-    background-color:rgb(0,0,0);
+    
 }
+
+
+div.cFloat{
+    clear:both;
+    width:100%;
+}
+
+
 div.serverStatus{
     background-color:rgba(12,12,12,0.7);
     border-style: solid;
@@ -84,6 +95,7 @@ div.dataContainer{
     float:left;
     padding-left:5px;
 }
+
 div.serverTitle{
     font-size:12px;
     color:rgb(255,255,255);

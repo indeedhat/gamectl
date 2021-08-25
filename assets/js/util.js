@@ -114,6 +114,8 @@ const percentage = (total, amount, decimals = 2) => {
     return (100 / total * amount).toFixed(decimals) + "%";
 };
 
+
+
 const escape = str => {
   let div = document.createElement('div');
   div.appendChild(document.createTextNode(str));

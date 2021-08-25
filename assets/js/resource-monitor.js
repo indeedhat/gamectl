@@ -121,6 +121,19 @@ const buildTemplate = ({ uptime, memory, cpu, network, mount }) => {
                 </div>
             </div>
 
+
+            <div class="sysItem">
+                <div class="sysLabel"> 
+                CPU
+                </div>
+        
+                <div class="sysData">
+                <div style="width:${percentage(cpuTotal, cpuTotal - cpuIdle)};height:15px;background-color:rgb(${cpuTemp(percentage(cpuTotal, cpuTotal - cpuIdle))});"></div>
+                ${percentage(cpuTotal, cpuTotal - cpuIdle)}
+                </div>
+            </div>
+
+
             <div class="sysItem">
                 <div class="sysLabel"> 
                 CPU
@@ -134,6 +147,8 @@ const buildTemplate = ({ uptime, memory, cpu, network, mount }) => {
             ${coreTemplate}
                 </div>
             </div>
+
+
 
             <div class="sysItem">
                 <div class="sysLabel"> 
@@ -153,7 +168,8 @@ const buildTemplate = ({ uptime, memory, cpu, network, mount }) => {
                 <div class="sysData">
                 ${mountTemplate}
                 </div>
-            </div>              
+            </div> 
+            <div class="cFloat"></div>          
         </div>
     `;
 };
