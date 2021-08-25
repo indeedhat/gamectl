@@ -61,7 +61,11 @@
             const appKey = '{{ $key }}';
 
             new AppConfig('{{ $app.Title }}', appKey);
-            initDownloadButton(appKey, document.querySelector(`.serverStatus[data-key='${appKey}'] .controller.download`));
+
+            let $button = document.querySelector(`.serverStatus[data-key='${appKey}'] .controller.download`);
+            if ($button) {
+                initDownloadButton(appKey, $button);
+            }
 
             const $app = document.querySelector(`.serverStatus[data-key='${appKey}']`);
             const $status = $app.querySelector(".dataTile.status");
