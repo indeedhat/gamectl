@@ -47,16 +47,21 @@
                 <div class="controller restart">Restart</div>
                 <div class="controller config disabled">Config</div>
                 <div class="controller logs disabled">Logs</div>
+                {{ if $app.WorldDirectory }}
+                    <div class="controller download">Download World</div>
+                {{ end }}
             </div>
         </div>
         <script type="module">
             import { get, post } from "/assets/js/request.js";
             import { minDuration } from "/assets/js/util.js";
+            import { initDownloadButton } from "/assets/js/world-download.js";
             import AppConfig from '/assets/js/app-config.js';
 
-            new AppConfig('{{ $app.Title }}', '{{ $key }}');
-
             const appKey = '{{ $key }}';
+
+            new AppConfig('{{ $app.Title }}', appKey);
+            initDownloadButton(appKey, document.querySelector(`.serverStatus[data-key='${appKey}'] .controller.download`));
 
             const $app = document.querySelector(`.serverStatus[data-key='${appKey}']`);
             const $status = $app.querySelector(".dataTile.status");
