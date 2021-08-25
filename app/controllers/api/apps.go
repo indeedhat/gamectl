@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 	"os"
-	"path"
 	"time"
 
 	"github.com/indeedhat/gamectl/app/config"
