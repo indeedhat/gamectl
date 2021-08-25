@@ -6,7 +6,7 @@ commands:
   status: ".examples/minecraft/status.sh"
   start: ".examples/minecraft/start.sh"
   stop: ".examples/minecraft/stop.sh"
-worldDirectory: "./examples/minecraft/world"
+worldDirectory: ".examples/minecraft/world"
 files:
   server.properties: 
     path: ".examples/minecraft/config/server.properties"

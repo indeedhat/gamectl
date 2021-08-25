@@ -43,7 +43,7 @@ type App struct {
 	Icon        string
 	MaxPlayers  string `yaml:"maxPlayers"`
 
-	WorldDirectory string
+	WorldDirectory string `yaml:"worldDirectory"`
 
 	Commands struct {
 		Status string
@@ -130,7 +130,7 @@ func (app App) BackupWorldDirectory(name string) (string, error) {
 	destinationFile := fmt.Sprintf("%s.zip", name)
 	extension := path.Ext(destinationFile)
 
-	if extension != "zip" {
+	if extension != ".zip" {
 		return "", ErrBadExtension
 	}
 

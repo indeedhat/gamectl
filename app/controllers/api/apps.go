@@ -1,8 +1,11 @@
 package api
 
 import (
+	"fmt"
+	"log"
 	"net/http"
 	"os"
+	"path"
 
 	"github.com/indeedhat/gamectl/app/config"
 
@@ -100,18 +103,21 @@ func DownloadAppWorldController(ctx *gin.Context) {
 
 	app := config.GetApp(appKey)
 	if app == nil || app.WorldDirectory == "" {
+		log.Print("no direcotry")
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
 
 	status, err := app.Status()
 	if err != nil {
+		log.Print("app status failed")
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 
 	if status.Online {
 		if err := app.Stop(); err != nil {
+			log.Print("failed to stop server")
 			ctx.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
@@ -121,11 +127,13 @@ func DownloadAppWorldController(ctx *gin.Context) {
 
 	archivePath, err := app.BackupWorldDirectory(appKey)
 	if err != nil {
+		log.Print("archive failed", err)
 		ctx.AbortWithStatus(http.StatusInternalServerError)
 		return
 	}
 	defer os.Remove(archivePath)
 
+	ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", path.Base(archivePath)))
 	ctx.File(archivePath)
 
 }
