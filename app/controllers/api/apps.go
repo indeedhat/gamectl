@@ -136,7 +136,7 @@ func DownloadAppWorldController(ctx *gin.Context) {
 
 	ctx.Header(
 		"Content-Disposition",
-		fmt.Sprintf("attachment; filename=\"%s-%s.zip\"", path.Base(archivePath), time.Now().Format("06-01-02")),
+		fmt.Sprintf("attachment; filename=\"%s-%s.zip\"", appKey, time.Now().Format("06-01-02")),
 	)
 	ctx.File(archivePath)
 
