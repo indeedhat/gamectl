@@ -172,3 +172,11 @@ div.alert {
     font-weight: bold;
     text-align: center;
 }
+
+.status.online {
+    color: green;
+}
+
+.status.offline {
+    color: red;
+}
