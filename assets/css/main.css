@@ -173,9 +173,7 @@ div.alert {
     text-align: center;
 }
 
-progress.sysBar{
-    width:100%;
-}
+
 .status.online {
     color: green;
 }
