@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"os"
 	"path"
+	"time"
 
 	"github.com/indeedhat/gamectl/app/config"
 
@@ -133,7 +134,10 @@ func DownloadAppWorldController(ctx *gin.Context) {
 	}
 	defer os.Remove(archivePath)
 
-	ctx.Header("Content-Disposition", fmt.Sprintf("attachment; filename=\"%s\"", path.Base(archivePath)))
+	ctx.Header(
+		"Content-Disposition",
+		fmt.Sprintf("attachment; filename=\"%s-%s.zip\"", path.Base(archivePath), time.Now().Format("06-01-02")),
+	)
 	ctx.File(archivePath)
 
 }
