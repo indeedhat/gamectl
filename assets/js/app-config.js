@@ -51,7 +51,7 @@ class AppConfigController
     {
         try {
             this.configFiles = JSON.parse(this.$app.dataset.config);
-            this.$configButton.classList.remove("disabled");
+            this.$configButton.removeAttribute("disabled");
             this._initializeConfigModal();
         } catch (e) {
         }
@@ -61,7 +61,7 @@ class AppConfigController
     {
         try {
             this.logFiles = JSON.parse(this.$app.dataset.logs);
-            this.$logButton.classList.remove("disabled");
+            this.$logButton.removeAttribute("disabled");
             this._initialzeLogsModal();
         } catch (e) {
         }
