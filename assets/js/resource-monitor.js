@@ -125,16 +125,29 @@ const buildTemplate = ({ uptime, memory, cpu, network, mount }) => {
                 CPU
                 </div>
         
-                <div class="sysData">
-                <div style="width:${percentage(cpuTotal, cpuTotal - cpuIdle)};height:15px;background-color:rgb(${cpuTemp(percentage(cpuTotal, cpuTotal - cpuIdle))});"></div>
-                ${percentage(cpuTotal, cpuTotal - cpuIdle)}
+                <div class="sysData" 
+                style="
+                background-color:rgb(200,200,200);
+                padding:1px;
+                margin-left:1%;
+                margin-right:1%;
+                width:88%;
+                ">
+                    <div style="
+                    width:${percentage(cpuTotal, cpuTotal - cpuIdle)};
+                    height:15px;
+                    background-color:rgb(${cpuTemp(percentage(cpuTotal, cpuTotal - cpuIdle))});
+                    ">
+                    </div>
+                    <label for="cpuPercent" style="color:white;">${percentage(cpuTotal, cpuTotal - cpuIdle)}</label>
+                    <progress id="cpuPercent" max="100" value="${(percentage(cpuTotal, cpuTotal - cpuIdle)).slice(0,-1)}"></progress>
                 </div>
             </div>
 
 
             <div class="sysItem">
                 <div class="sysLabel"> 
-                CPU
+                Cores
                 </div>
         
                 <div class="sysData">
