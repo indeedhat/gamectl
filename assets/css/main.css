@@ -83,7 +83,7 @@ div.serverStatus{
     border-style: solid;
     border-width:2px;
     border-color:rgba(0, 0, 0,0.9);   
-    width:15%;
+    min-width:15%;
     float:left;
     margin:10px;
     padding:5px;
@@ -134,7 +134,7 @@ div.controller{
 }
 
 img.icon{
-    width:30%;
+    width:60px;
     float:left;
 }
 
