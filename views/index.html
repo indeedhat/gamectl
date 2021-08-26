@@ -47,108 +47,21 @@
                 <button class="controller restart" disabled>Restart</button>
                 <button class="controller config" disabled>Config</button>
                 <button class="controller logs" disabled>Logs</button>
-                <button class="controller download" disabled>Download World</button>
+                {{ if $app.WorldDirectory }}
+                    <button class="controller download">Download World</button>
+                {{ else }}
+                    <button class="controller download" disabled>Download World</button>
+                {{ end }}
             </div>
         </div>
         <script type="module">
-            import { get, post } from "/assets/js/request.js";
-            import { minDuration } from "/assets/js/util.js";
-            import { initDownloadButton } from "/assets/js/world-download.js";
             import AppConfig from '/assets/js/app-config.js';
+            import AppControls from '/assets/js/app-controls.js';
 
             const appKey = '{{ $key }}';
 
             new AppConfig('{{ $app.Title }}', appKey);
-
-            let $button = document.querySelector(`.serverStatus[data-key='${appKey}'] .controller.download`);
-            {{ if $app.WorldDirectory }}
-                $button.removeAttribute("disabled");
-            {{ end }}
-
-            initDownloadButton(appKey, $button);
-
-            const $app = document.querySelector(`.serverStatus[data-key='${appKey}']`);
-            const $status = $app.querySelector(".dataTile.status");
-            const $players = $app.querySelector(".dataTile.players");
-            const $uptime = $app.querySelector(".dataTile.uptime");
-
-            const $startStopButton = $app.querySelector(".controller.startStop");
-            const $restartButton = $app.querySelector(".controller.restart");
-
-            const getStatus = async () => {
-                let [code, json] = await get(`/api/apps/${appKey}`)
-                if (!json.outcome) {
-                    return;
-                }
-
-                if (json.status.online) {
-                    $status.classList.add("online");
-                    $status.classList.remove("offline");
-
-                    $startStopButton.innerHTML = "Stop";
-                    $startStopButton.onclick = stopServer;
-
-                    $restartButton.removeAttribute("disabled");
-                    $restartButton.onclick = restartServer;
-                } else {
-                    $status.classList.remove("online");
-                    $status.classList.add("offline");
-
-                    $startStopButton.innerHTML = "Start";
-                    $startStopButton.onclick = startServer;
-
-                    $restartButton.setAttribute("disabled", true);
-                }
-
-                $status.innerHTML = json.status.online ? "Online" : "Offline";
-                $players.querySelector(".current").innerHTML = json.status.users;
-                $uptime.innerHTML = minDuration(json.status.uptime);
-            };
-
-            const startServer = async () => {
-                $startStopButton.innerHTML = "Starting...";
-                try {
-                    let [code, json] = await post(`/api/apps/${appKey}/start`, {})
-                    if (!json.outcome) {
-                        throw new Error();
-                    }
-
-                    getStatus();
-                } catch (e) {
-                    $startStopButton.innerHTML = "Start Failed!";
-                }
-            };
-
-            const stopServer = async () => {
-                $startStopButton.innerHTML = "Stopping...";
-                try {
-                    let [code, json] = await post(`/api/apps/${appKey}/stop`, {})
-                    if (!json.outcome) {
-                        throw new Error();
-                    }
-
-                    getStatus();
-                } catch (e) {
-                    $startStopButton.innerHTML = "Stop Failed!";
-                }
-            };
-
-            const restartServer = async () => {
-                $startStopButton.innerHTML = "Restarting...";
-                try {
-                    let [code, json] = await post(`/api/apps/${appKey}/restart`, {})
-                    if (!json.outcome) {
-                        throw new Error();
-                    }
-
-                    getStatus();
-                } catch (e) {
-                    $startStopButton.innerHTML = "Restart Failed!";
-                }
-            };
-
-            getStatus();
-            setTimeout(getStatus, 60000)
+            new AppControls(appKey);
         </script>
 
         <script>update_css()</script>
