@@ -21,7 +21,7 @@ class AppControls
         this.$uptime = this.$app.querySelector(".dataTile.uptime");
 
         this.updateStatus();
-        setTimeout(this.updateStatus, 30000);
+        setTimeout(this.updateStatus.bind(this), 30000);
 
         this._includeJsDownloader();
         this._initDownloadButton();
@@ -29,7 +29,7 @@ class AppControls
 
     async updateStatus()
     {
-        this._handleUpdateSatus()
+        this._handleUpdateStatus()
     }
 
     _includeJsDownloader()
@@ -104,7 +104,7 @@ class AppControls
         this.$restartButton.removeAttribute("dsiabled");
     }
 
-    async _handleUpdateSatus()
+    async _handleUpdateStatus()
     {
         this.$status.classList.remove("offline", "online");
         this.$restartButton.onclick = null;
