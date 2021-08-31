@@ -61,8 +61,11 @@
     width: 0;
 
     overflow: hidden;
-    color: black;
     padding: 2px 4px;
+}
+
+#resource-monitor .progress .bar .value {
+    color: black;
 }
 
 #resource-monitor .progress .value {

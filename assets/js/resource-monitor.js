@@ -187,7 +187,9 @@ const progressBar = (text, width, color) => {
     return `
         <div class="progress">
             <span class="value">${text}</span>
-            <div class="bar" style="width:${width};background:${color};">${text}</div>
+            <div class="bar" style="width:${width};background:${color};">
+                <span class="value">${text}</span>
+            </div>
         </div>
     `;
 };
