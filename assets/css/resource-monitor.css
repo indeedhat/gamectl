@@ -1,5 +1,5 @@
 #resource-monitor .data {
-    padding-top: 10px;
+    padding: 10px;
     border: 2px solid black;
     background: black;
 }
@@ -19,6 +19,7 @@
 #resource-monitor .core .key {
     font-weight: bold;
     width: 60px;
+    text-align: center;
 }
 #resource-monitor .core .progress {
     flex-grow: 1;
@@ -49,7 +50,7 @@
     position: relative;
     border: 1px solid white;
 
-    margin: 1px;
+    margin: 2px;
     height: 24px;
 
     font-weight: bold;
@@ -76,4 +77,8 @@
     left:0;
 
     padding: 2px 4px;
+}
+
+#resource-monitor .sysData.cpu {
+    text-align: right;
 }

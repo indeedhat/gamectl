@@ -133,7 +133,7 @@ const buildTemplate = ({ uptime, memory, cpu, network, mount }) => {
                     CPU
                 </div>
         
-                <div class="sysData">
+                <div class="sysData cpu">
                     ${progressBar(
                         `<strong>Total:</strong>${percentage(cpuTotal, cpuTotal - cpuIdle)}`, 
                         percentage(cpuTotal, cpuTotal - cpuIdle),
