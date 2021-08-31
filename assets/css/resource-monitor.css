@@ -12,7 +12,7 @@
 }
 
 #resource-monitor .core {
-    width: calc(25% - 4px);
+    width: 25%;
     min-width: 150px;
     display: inline-flex;
 }
@@ -79,6 +79,3 @@
     padding: 2px 4px;
 }
 
-#resource-monitor .sysData.cpu {
-    text-align: right;
-}

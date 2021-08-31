@@ -72,8 +72,7 @@ const buildTemplate = ({ uptime, memory, cpu, network, mount }) => {
         cpuIdle += core.idle;
 
         let ptg = percentage(core.total, core.total - core.idle);
-        coreTemplate += `
-            <div class="core">
+        coreTemplate += `<div class="core">
                 <div class="key">${key}:</div>
                 ${progressBar(ptg, ptg, `rgb(${cpuTemp(ptg)})`)}
             </div>`;
@@ -133,7 +132,7 @@ const buildTemplate = ({ uptime, memory, cpu, network, mount }) => {
                     CPU
                 </div>
         
-                <div class="sysData cpu">
+                <div class="sysData">
                     ${progressBar(
                         `<strong>Total:</strong>${percentage(cpuTotal, cpuTotal - cpuIdle)}`, 
                         percentage(cpuTotal, cpuTotal - cpuIdle),
