@@ -119,7 +119,7 @@ div.dataTile {
 }
 
 div.dataTile .label {
-    width: 80px;
+    width: 70px;
     display: inline-block;
     font-weight: bold;
 }
@@ -129,10 +129,10 @@ div.dataTile .data {
     display: inline-block;
 }
 
-div.appHeader img.icon {
+div.appHeader .icon {
     display: inline-block;
     height: 72px;
-    margin: 10px 0;
+    padding: 5px;
 }
 
 

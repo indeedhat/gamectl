@@ -98,9 +98,9 @@ const minDuration = unix => {
     const minutes = Math.floor((unix % 3600) / 60);
     const seconds = Math.floor(unix % 60);
 
-    return (days ? `${days}d, ` : '')
-        + (hours ? `${hours}h, ` : '')
-        + (minutes ? `${minutes}m, ` : '')
+    return (days ? `${days}d ` : '')
+        + (hours ? `${hours}h ` : '')
+        + (minutes ? `${minutes}m ` : '')
         + `${seconds}s`;
 };
 
