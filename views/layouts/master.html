@@ -48,6 +48,10 @@
             </nav>
         </header>
 
+        {{ template "resource" . }}
+        {{ define "resource" }}
+        {{ end }}
+
         <main>
             {{ template "content" . }}
         </main>

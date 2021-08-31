@@ -1,5 +1,7 @@
 #resource-monitor .data {
+    padding-top: 10px;
     border: 2px solid black;
+    background: black;
 }
 
 #resource-monitor .data td,

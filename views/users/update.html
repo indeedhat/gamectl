@@ -1,6 +1,6 @@
 {{ define "content" }}
-<div class="bodyTitle">&gt; Update User ({{ .subject.Name }})</div>
 <div class="body">
+    <div class="bodyTitle">&gt; Update User ({{ .subject.Name }})</div>
     <form action="" method="post">
         {{ if .errorString }}
             <div class="error">{{ .errorString }}</div>

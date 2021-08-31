@@ -1,86 +1,82 @@
-{{ define "content" }}
-
-<link rel="stylesheet" href="/assets/js/lib/codemirror/lib/codemirror.css" />
-<link rel="stylesheet" href="/assets/js/lib/codemirror/theme/darcula.css" />
-<script src="/assets/js/lib/codemirror/lib/codemirror.js"></script>
-
-<div class="bodyTitle">> Main Controls</div>
-<div class="body">
+{{ define "resource" }}
     <div id="resource-monitor">
-        <div class="error">
-            Kag, this really needs making pretty
-            <br />
-            HELP!
-        </div>
         <div class="data"></div>
     </div>
     <script type="module">
         import ResourceMonitor from '/assets/js/resource-monitor.js';
         new ResourceMonitor("#resource-monitor");
     </script>
+{{ end }}
 
-    {{ range $key, $app := .apps }}
-        <div 
-            class="serverStatus" 
-            data-key="{{ $key }}" 
-            data-config="{{ json $app.ConfigFiles }}"
-            data-logs="{{ json $app.LogFiles }}"
-        >
-            <div class="serverTitle">&gt; {{ $app.Title }}</div>
+{{ define "content" }}
+    <link rel="stylesheet" href="/assets/js/lib/codemirror/lib/codemirror.css" />
+    <link rel="stylesheet" href="/assets/js/lib/codemirror/theme/darcula.css" />
+    <script src="/assets/js/lib/codemirror/lib/codemirror.js"></script>
 
-            <div class="appHeader">
-                <div class="dataContainer clearfix">
-                    <div class="dataTile">
-                        <div class="label">Status:</div>  
-                        <div class="data status">UNKNOWN</div>
-                    </div>
+    <div class="body">
+        <div class="bodyTitle">> Main Controls</div>
 
-                    <div class="dataTile">
-                        <div class="label">Players:</div>
-                        <div class="data players">
-                            <span class="current">-1</span>/<span class="max">-1</span>
+        {{ range $key, $app := .apps }}
+            <div 
+                class="serverStatus" 
+                data-key="{{ $key }}" 
+                data-config="{{ json $app.ConfigFiles }}"
+                data-logs="{{ json $app.LogFiles }}"
+            >
+                <div class="serverTitle">&gt; {{ $app.Title }}</div>
+
+                <div class="appHeader">
+                    <div class="dataContainer clearfix">
+                        <div class="dataTile">
+                            <div class="label">Status:</div>  
+                            <div class="data status">UNKNOWN</div>
                         </div>
-                    </div>  
 
-                    <div class="dataTile">
-                        <div class="label">Uptime:</div>  
-                        <div class="data uptime">-1</div>
+                        <div class="dataTile">
+                            <div class="label">Players:</div>
+                            <div class="data players">
+                                <span class="current">-1</span>/<span class="max">-1</span>
+                            </div>
+                        </div>  
+
+                        <div class="dataTile">
+                            <div class="label">Uptime:</div>  
+                            <div class="data uptime">-1</div>
+                        </div>
+                    </div>
+
+                    <div class="icon">
+                        <img class="icon" src="{{ $app.Icon }}">
                     </div>
                 </div>
+                
 
-                <div class="icon">
-                    <img class="icon" src="{{ $app.Icon }}">
+
+                <div class="controls">
+                    <button class="controller startStop">Stop</button>
+                    <button class="controller restart" disabled>Restart</button>
+                    <button class="controller config" disabled>Config</button>
+                    <button class="controller logs" disabled>Logs</button>
+                    {{ if $app.WorldDirectory }}
+                        <button class="controller download">Download World</button>
+                    {{ else }}
+                        <button class="controller download" disabled>Download World</button>
+                    {{ end }}
                 </div>
             </div>
-            
+            <script type="module">
+                import AppConfig from '/assets/js/app-config.js';
+                import AppControls from '/assets/js/app-controls.js';
 
+                const appKey = '{{ $key }}';
 
-            <div class="controls">
-                <button class="controller startStop">Stop</button>
-                <button class="controller restart" disabled>Restart</button>
-                <button class="controller config" disabled>Config</button>
-                <button class="controller logs" disabled>Logs</button>
-                {{ if $app.WorldDirectory }}
-                    <button class="controller download">Download World</button>
-                {{ else }}
-                    <button class="controller download" disabled>Download World</button>
-                {{ end }}
-            </div>
-        </div>
-        <script type="module">
-            import AppConfig from '/assets/js/app-config.js';
-            import AppControls from '/assets/js/app-controls.js';
+                new AppConfig('{{ $app.Title }}', appKey);
+                new AppControls(appKey);
+            </script>
 
-            const appKey = '{{ $key }}';
+            <script>update_css()</script>
+        {{ end }}
 
-            new AppConfig('{{ $app.Title }}', appKey);
-            new AppControls(appKey);
-        </script>
-
-        <script>update_css()</script>
-    {{ end }}
-
-    <div class="clearfix"></div>
-</div>
-
+        <div class="clearfix"></div>
+    </div>
 {{ end }}

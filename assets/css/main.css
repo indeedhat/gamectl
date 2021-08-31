@@ -14,6 +14,21 @@ html, body {
 
     font-family: Arial, Helvetica, sans-serif;
     background-image: url(/assets/img/bg.png);
+    
+    min-height: 100vh;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+}
+
+main {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 div.body{
@@ -24,6 +39,7 @@ div.body{
     margin:auto;
     /* margin-bottom: 35vh; */
     padding:10px;
+    padding-top: 0;
     /* border-radius: 10px; */
     border-style: solid;
     border-width:2px;
@@ -31,13 +47,10 @@ div.body{
 }
 
 div.bodyTitle{
-    width:70%;
     min-width:20em;
     background-color: rgba(0,0,0,1);
-    margin:auto;
-    margin-top: 35vh;
     padding:5px 10px;
-    /* border-radius: 10px; */
+    margin: 0 -10px 10px -10px;
     font-size:12px;
     color:rgb(255,255,255);
 }
