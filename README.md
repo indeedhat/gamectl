@@ -2,29 +2,19 @@
 Control game servers from web ui
 
 ## Requirements
-go 1.16+ \
+go 1.15+ `may work with earlier version but untested` \
 cmake
 
 ## Run the project
 ```shell
 make run
 ```
+The webui will  be available at localhost:8080
 
 ## TODO
-- [ ] implement start/stop restart in frontend
-- [ ] implement status in frontend
-- [ ] world backups
 - [ ] game server requirements config
     - i want to allow game server configs to be able to define the resources
       they require, that way cc can make decisions on if multiple can run at once
-- [x] activity monitor
-- [x] server logs
-    - [x] add to config
-    - [x] should be able to have multple log files/commands
-    - [x] add websocket endpoint for streaming logs
-        - ended up using http streams instead of web sockets
-    - [x] add option to frontend (show in modal)
-- [x] reload app config
 - [ ] maybe add some unit testing
 - [ ] docker support
     - running this in docker would be a pain as it would require a companion app to run on the host to trigger\
@@ -33,19 +23,21 @@ make run
     - [ ] implement into web app
     - [ ] docker file
     - [ ] docker-compose config
+- [x] implement start/stop restart in frontend
+- [x] implement status in frontend
+- [x] world backups
+- [x] activity monitor
+- [x] server logs
+    - [x] add to config
+    - [x] should be able to have multple log files/commands
+    - [x] add websocket endpoint for streaming logs
+        - ended up using http streams instead of web sockets
+    - [x] add option to frontend (show in modal)
+- [x] reload app config
 
-The webui will  be available at localhost:8080
-
-## Kagorus jobs
-Design a pretty user interface
-
-for now this can all be done in the index.tmpl file
-
-It would be good to get you to do some of the intergrating the theme into the system but as
-you have never actually used go before (and more to the point its templating engine) i might need
-to go through that with you to begin with.
 
 ## Directory structure
+- **.temp/** used for creating temp files during world download process
 - **app/** this is where the backend logic exists
 - **assets/** this is where all the public available assets exist (css, js, images etc.)
 - **config/** this is where the yaml files for setting up the game servers live

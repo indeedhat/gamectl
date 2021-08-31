@@ -13,4 +13,4 @@ if [[ -f ".examples/minecraft/.mc.lock" ]]; then
     let UPTIME=${now}-${startTime}
 fi
 
-echo "{\"online\":${STATUS},\"users\":${PLAYERS},\"uptime\":${UPTIME}}"
+echo "{\"online\":${STATUS},\"players\":${PLAYERS},\"max_players\":10,\"uptime\":${UPTIME}}"

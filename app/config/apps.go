@@ -27,10 +27,11 @@ var (
 
 // AppStatus
 type AppStatus struct {
-	Online    bool `json:"online"`
-	UserCount int8 `json:"users"`
-	Uptime    uint `json:"uptime"`
-	Extra     []struct {
+	Online      bool `json:"online"`
+	MaxPlayers  int8 `json:"max_players"`
+	PlayerCount int8 `json:"players"`
+	Uptime      uint `json:"uptime"`
+	Extra       []struct {
 		Name  string `json:"name"`
 		Value string `json:"value"`
 	} `json:"extra"`
@@ -41,7 +42,6 @@ type App struct {
 	Title       string
 	Description string
 	Icon        string
-	MaxPlayers  string `yaml:"maxPlayers"`
 
 	WorldDirectory string `yaml:"worldDirectory"`
 

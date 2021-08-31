@@ -26,22 +26,33 @@
             data-config="{{ json $app.ConfigFiles }}"
             data-logs="{{ json $app.LogFiles }}"
         >
-            <div class="serverTitle">> {{ $app.Title }}</div>
+            <div class="serverTitle">&gt; {{ $app.Title }}</div>
 
-            <div class="dataContainer">
-                <div class="dataTile statusLabel">Status  :</div>  
-                <div class="dataTile status"> Fixme</div>
+            <div class="appHeader">
+                <div class="dataContainer clearfix">
+                    <div class="dataTile">
+                        <div class="label">Status:</div>  
+                        <div class="data status">UNKNOWN</div>
+                    </div>
 
-                <div class="dataTile playersLabel">Players :</div>  
-                <div class="dataTile players" > 
-                    <span class="current">Fixme</span>/<span class="max">{{ $app.MaxPlayers }}</span>
+                    <div class="dataTile">
+                        <div class="label">Players:</div>
+                        <div class="data players">
+                            <span class="current">-1</span>/<span class="max">-1</span>
+                        </div>
+                    </div>  
+
+                    <div class="dataTile">
+                        <div class="label">Uptime:</div>  
+                        <div class="data uptime">-1</div>
+                    </div>
                 </div>
 
-                <div class="dataTile uptimeLabel">Uptime  :</div>  
-                <div class="dataTile uptime"> fixme</div>
-
+                <img class="icon" src="{{ $app.Icon }}">
             </div>
-            <img class="icon" src="{{ $app.Icon }}">
+            
+
+
             <div class="controls">
                 <button class="controller startStop">Stop</button>
                 <button class="controller restart" disabled>Restart</button>
@@ -68,6 +79,55 @@
     {{ end }}
 
     <div class="clearfix"></div>
+
+    <!-- BAR TEST -->
+    <div>
+        <input type="range">
+        <div class="bar">
+            <div class="inner">0%</div>
+            <span class="value">0%</span>
+        </div>
+    </div>
+    <script>
+        let $range = document.querySelector("input[type=range]");
+        let $bar = document.querySelector(".bar");
+        let $inner = $bar.querySelector(".inner");
+        let $value = $bar.querySelector(".value");
+
+        $range.onchange = () => {
+            $inner.innerHTML = `${$range.value}%`;
+            $value.innerHTML = `${$range.value}%`;
+            $inner.style.width = `${$range.value}%`;
+        };
+    </script>
+    <style>
+        .bar {
+            position:relative;
+            background: white;
+            border: 1px solid white;
+
+            font-weight: bold;
+        }
+
+        .inner {
+            position: absolute;
+            top:0;
+            bottom:0;
+            left:0;
+            width: 0;
+
+            overflow: hidden;
+
+            background: lightblue;
+            color: red;
+        }
+
+        .inner, .value {
+            padding-left: 10px;
+        }
+
+    </style>
+    <!-- END BAR TEST -->
 </div>
 
 {{ end }}

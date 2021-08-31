@@ -13,12 +13,13 @@ class AppControls
         }
 
         this.$startStopButton = this.$app.querySelector(".controller.startStop");
-        this.$restartButton = this.$app.querySelector(".controller.restart");
-        this.$downloadButton = this.$app.querySelector(".controller.download");
+        this.$restartButton   = this.$app.querySelector(".controller.restart");
+        this.$downloadButton  = this.$app.querySelector(".controller.download");
 
-        this.$status = this.$app.querySelector(".dataTile.status");
-        this.$players = this.$app.querySelector(".dataTile.players .current");
-        this.$uptime = this.$app.querySelector(".dataTile.uptime");
+        this.$status     = this.$app.querySelector(".dataTile .status");
+        this.$players    = this.$app.querySelector(".dataTile .players .current");
+        this.$maxPlayers = this.$app.querySelector(".dataTile .players .max");
+        this.$uptime     = this.$app.querySelector(".dataTile .uptime");
 
         this.updateStatus();
         setTimeout(this.updateStatus.bind(this), 30000);
@@ -27,6 +28,11 @@ class AppControls
         this._initDownloadButton();
     }
 
+    /**
+     * Trigger a new call to get the status for an app
+     *
+     * @return Promise<void>
+     */
     async updateStatus()
     {
         this._handleUpdateStatus()
@@ -117,7 +123,8 @@ class AppControls
                 throw new Error();
             }
 
-            this.$players.innerHTML = -1 === ~~json.status.users ? "N/A" : json.status.users;
+            this.$players.innerHTML = -1 === ~~json.status.players ? "N/A" : json.status.players;
+            this.$maxPlayers.innerHTML = -1 === ~~json.status.max_players ? "N/A" : json.status.max_players;
             this.$uptime.innerHTML = minDuration(json.status.uptime);
 
             if (!json.status.online) {
