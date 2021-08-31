@@ -157,6 +157,7 @@ div.controls{
     color:rgb(255,255,255);
     text-align: center;
     padding:5px;
+    margin-bottom: 3px;
 }
 
 button.controller{
