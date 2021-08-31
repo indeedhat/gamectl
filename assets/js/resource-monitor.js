@@ -71,10 +71,11 @@ const buildTemplate = ({ uptime, memory, cpu, network, mount }) => {
         cpuTotal += core.total;
         cpuIdle += core.idle;
 
+        let ptg = percentage(core.total, core.total - core.idle);
         coreTemplate += `
             <div class="core">
-                <strong>${key}:</strong>
-                ${percentage(core.total, core.total - core.idle)}
+                <div class="key">${key}:</div>
+                ${progressBar(ptg, ptg, `rgb(${cpuTemp(ptg)})`)}
             </div>`;
     }
 
@@ -119,41 +120,18 @@ const buildTemplate = ({ uptime, memory, cpu, network, mount }) => {
                 </div>
             </div>
 
-
             <div class="sysItem">
                 <div class="sysLabel"> 
                 CPU
                 </div>
         
-                <div class="sysData" 
-                style="
-                background-color:rgb(120,120,120);
-                padding:1px;
-                margin-left:1%;
-                margin-right:1%;
-                width:88%;
-                ">
-                    <div style="
-                    width:${percentage(cpuTotal, cpuTotal - cpuIdle)};
-                    height:15px;
-                    background-color:rgb(${cpuTemp(percentage(cpuTotal, cpuTotal - cpuIdle))});
-                    ">
-                    </div>
-                </div>
-            </div>
-
-
-            <div class="sysItem">
-                <div class="sysLabel"> 
-                Cores
-                </div>
-        
                 <div class="sysData">
-                <div>
-                <strong>Total:</strong>
-                ${percentage(cpuTotal, cpuTotal - cpuIdle)}
-            </div>
-            ${coreTemplate}
+                    ${progressBar(
+                        `<strong>Total:</strong>${percentage(cpuTotal, cpuTotal - cpuIdle)}`, 
+                        percentage(cpuTotal, cpuTotal - cpuIdle),
+                        `rgb(${cpuTemp(percentage(cpuTotal, cpuTotal - cpuIdle))})`
+                    )}
+                    ${coreTemplate}
                 </div>
             </div>
 
@@ -198,5 +176,13 @@ const sortCores = cpu => {
         }, {})
 };
 
+const progressBar = (text, width, color) => {
+    return `
+        <div class="progress">
+            <span class="value">${text}</span>
+            <div class="bar" style="width:${width};background:${color};">${text}</div>
+        </div>
+    `;
+};
 
 export default ResourceMonitor;

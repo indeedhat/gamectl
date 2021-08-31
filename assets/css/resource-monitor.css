@@ -12,7 +12,14 @@
 #resource-monitor .core {
     width: 24%;
     min-width: 150px;
-    display: inline-block;
+    display: inline-flex;
+}
+#resource-monitor .core .key {
+    font-weight: bold;
+    width: 60px;
+}
+#resource-monitor .core .progress {
+    flex-grow: 1;
 }
 
 #resource-monitor .intf > * {
@@ -27,4 +34,32 @@
 #resource-monitor .mnt > * {
     display: inline-block;
     min-width: 80px;
+}
+
+#resource-monitor .progress {
+    position: relative;
+    border: 1px solid white;
+    margin: 1px;
+    height: 24px;
+}
+
+#resource-monitor .progress .bar {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+    width: 0;
+
+    overflow: hidden;
+    color: black;
+    padding: 2px 4px;
+}
+
+#resource-monitor .progress .value {
+    position: absolute;
+    top:0;
+    bottom:0;
+    left:0;
+
+    padding: 2px 4px;
 }

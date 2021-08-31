@@ -79,55 +79,6 @@
     {{ end }}
 
     <div class="clearfix"></div>
-
-    <!-- BAR TEST -->
-    <div>
-        <input type="range">
-        <div class="bar">
-            <div class="inner">0%</div>
-            <span class="value">0%</span>
-        </div>
-    </div>
-    <script>
-        let $range = document.querySelector("input[type=range]");
-        let $bar = document.querySelector(".bar");
-        let $inner = $bar.querySelector(".inner");
-        let $value = $bar.querySelector(".value");
-
-        $range.onchange = () => {
-            $inner.innerHTML = `${$range.value}%`;
-            $value.innerHTML = `${$range.value}%`;
-            $inner.style.width = `${$range.value}%`;
-        };
-    </script>
-    <style>
-        .bar {
-            position:relative;
-            background: white;
-            border: 1px solid white;
-
-            font-weight: bold;
-        }
-
-        .inner {
-            position: absolute;
-            top:0;
-            bottom:0;
-            left:0;
-            width: 0;
-
-            overflow: hidden;
-
-            background: lightblue;
-            color: red;
-        }
-
-        .inner, .value {
-            padding-left: 10px;
-        }
-
-    </style>
-    <!-- END BAR TEST -->
 </div>
 
 {{ end }}

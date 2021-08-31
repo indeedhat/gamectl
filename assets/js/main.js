@@ -1,4 +1,4 @@
-function cpuTemp(usage){
+function cpuTemp(usage) {
     sliced=usage.slice(0,-1);
     
     switch(true){
