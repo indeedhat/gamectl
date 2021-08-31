@@ -92,8 +92,12 @@ const buildTemplate = ({ uptime, memory, cpu, network, mount }) => {
     for (let [ key, mnt ] of Object.entries(mount)) {
         mountTemplate += `
             <div class="mnt">
-                <strong>${key}:</strong>
-                ${fileSize(mnt.used)} / ${fileSize(mnt.total)}
+                <div class="key">${key}:</div>
+                ${progressBar(
+                    `${fileSize(mnt.used)} / ${fileSize(mnt.total)}`,
+                    percentage(mnt.total, mnt.used),
+                    `rgb(${cpuTemp(percentage(mnt.total, mnt.used))})`
+                )}
             </div>
         `;
     }
@@ -102,27 +106,31 @@ const buildTemplate = ({ uptime, memory, cpu, network, mount }) => {
         <div class="sysStatus">
             <div class="sysItem">
                 <div class="sysLabel"> 
-                Uptime
+                    Uptime
                 </div>
             
                 <div class="sysData">
-                ${duration(uptime)}
+                    ${duration(uptime)}
                 </div>
             </div>
 
             <div class="sysItem">
                 <div class="sysLabel"> 
-                Memory
+                    Memory
                 </div>
         
                 <div class="sysData">
-                ${fileSize(memory.used)} / ${fileSize(memory.total)}
+                    ${progressBar(
+                        `${fileSize(memory.used)} / ${fileSize(memory.total)}`,
+                        percentage(memory.total, memory.used),
+                        `rgb(${cpuTemp(percentage(memory.total, memory.used))})`
+                    )}
                 </div>
             </div>
 
             <div class="sysItem">
                 <div class="sysLabel"> 
-                CPU
+                    CPU
                 </div>
         
                 <div class="sysData">
@@ -135,28 +143,27 @@ const buildTemplate = ({ uptime, memory, cpu, network, mount }) => {
                 </div>
             </div>
 
-
-
             <div class="sysItem">
                 <div class="sysLabel"> 
-                Network
+                    Mounts
                 </div>
         
                 <div class="sysData">
-                ${networkTemplate}
+                    ${mountTemplate}
+                </div>
+            </div>
+
+            <div class="sysItem">
+                <div class="sysLabel"> 
+                    Network
+                </div>
+        
+                <div class="sysData">
+                    ${networkTemplate}
                 </div>
             </div>            
-
-            <div class="sysItem">
-                <div class="sysLabel"> 
-                Mounts
-                </div>
-        
-                <div class="sysData">
-                ${mountTemplate}
-                </div>
-            </div> 
-            <div class="cFloat"></div>          
+             
+            <div class="clearfix"></div>          
         </div>
     `;
 };

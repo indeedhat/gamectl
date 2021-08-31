@@ -10,7 +10,7 @@
 }
 
 #resource-monitor .core {
-    width: 24%;
+    width: calc(25% - 4px);
     min-width: 150px;
     display: inline-flex;
 }
@@ -31,16 +31,26 @@
     width: 80px;
 }
 
-#resource-monitor .mnt > * {
-    display: inline-block;
-    min-width: 80px;
+#resource-monitor .mnt {
+    display: flex;
+}
+
+#resource-monitor .mnt .key {
+    font-weight: bold;
+    width: 60px;
+}
+#resource-monitor .mnt .progress {
+    flex-grow: 1;
 }
 
 #resource-monitor .progress {
     position: relative;
     border: 1px solid white;
+
     margin: 1px;
     height: 24px;
+
+    font-weight: bold;
 }
 
 #resource-monitor .progress .bar {
