@@ -1,5 +1,6 @@
 import { post, get } from '/assets/js/request.js';
 import { minDuration, once, loadJs } from '/assets/js/util.js';
+import * as Prompt from '/assets/js/prompt.js';
 
 class AppControls
 {
@@ -151,7 +152,13 @@ class AppControls
 
     async _handleDownload()
     {
-        if (!confirm("The game server will be shut down while the backup us processed!\nDo you wish to continue?")) {
+        try {
+            await Prompt.confirm(
+                "Are you sure?",
+                "The game server will be shut down while the backup us processed!<br />Do you wish to continue?"
+            );
+        } catch (e) {
+            console.error("Promot", e)
             return;
         }
 
