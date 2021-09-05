@@ -51,9 +51,15 @@ class AppConfigController
     {
         try {
             this.configFiles = JSON.parse(this.$app.dataset.config);
+            if (!Object.keys(this.configFiles).length) {
+                console.log(this.configFiles, this.configFiles.length)
+                throw new Error();
+            }
+
             this.$configButton.removeAttribute("disabled");
             this._initializeConfigModal();
         } catch (e) {
+            this.$configButton.setAttribute("disabled", true);
         }
     }
 
@@ -61,9 +67,14 @@ class AppConfigController
     {
         try {
             this.logFiles = JSON.parse(this.$app.dataset.logs);
+            if (!Object.keys(this.logFiles).length) {
+                throw new Error();
+            }
+
             this.$logButton.removeAttribute("disabled");
             this._initialzeLogsModal();
         } catch (e) {
+            this.$logButton.setAttribute("disabled", true);
         }
     }
 
