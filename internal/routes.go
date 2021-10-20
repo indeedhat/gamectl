@@ -1,4 +1,4 @@
-package app
+package internal
 
 import (
 	"encoding/json"
@@ -10,9 +10,9 @@ import (
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/memstore"
-	"github.com/indeedhat/gamectl/app/controllers"
-	"github.com/indeedhat/gamectl/app/controllers/api"
-	"github.com/indeedhat/gamectl/app/middleware"
+	"github.com/indeedhat/gamectl/internal/controllers"
+	"github.com/indeedhat/gamectl/internal/controllers/api"
+	"github.com/indeedhat/gamectl/internal/middleware"
 
 	"github.com/gin-gonic/gin"
 )
@@ -75,9 +75,10 @@ func BuildRoutes() *gin.Engine {
 // along with assign the templating engines its views directory
 func setupStatics(router *gin.Engine) {
 	static := router.Group("/", gzip.Gzip(gzip.DefaultCompression))
-	static.Static("/assets", "./assets")
+	static.Static("/assets", "./web/assets")
 
 	viewsConfig := goview.DefaultConfig
+	viewsConfig.Root = "./web/views"
 	viewsConfig.DisableCache = true
 	viewsConfig.Funcs = template.FuncMap{
 		"json": func(data interface{}) string {

@@ -4,9 +4,8 @@ clean:
 
 .PHONY: build
 build:
-	go build .
+	go build -o ./ ./...
 
 .PHONY: run
-run:
-	go build .
+run: build
 	./gamectl

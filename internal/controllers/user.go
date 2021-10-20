@@ -6,7 +6,7 @@ import (
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
-	"github.com/indeedhat/gamectl/app/models"
+	"github.com/indeedhat/gamectl/internal/models"
 )
 
 // loginInput form input for logging in

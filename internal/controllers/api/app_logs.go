@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/indeedhat/gamectl/app/config"
+	"github.com/indeedhat/gamectl/internal/config"
 
 	"github.com/gin-gonic/gin"
 )

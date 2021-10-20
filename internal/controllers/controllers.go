@@ -3,7 +3,7 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/indeedhat/gamectl/app/models"
+	"github.com/indeedhat/gamectl/internal/models"
 
 	"github.com/gin-gonic/gin"
 )

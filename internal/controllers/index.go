@@ -2,7 +2,7 @@ package controllers
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/indeedhat/gamectl/app/config"
+	"github.com/indeedhat/gamectl/internal/config"
 )
 
 func IndexController(ctx *gin.Context) {
