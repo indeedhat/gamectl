@@ -1,0 +1,107 @@
+<div id="resource-monitor" x-data="resourceMonitor">
+    <div class="data">
+        <table x-show="loading">
+            <tr>
+                <td>Loading System Resources...</td>
+            </tr>
+        </table>
+
+        <div class="sysStatus" x-show="!loading" style="display:none">
+            <div class="sysItem">
+                <div class="sysLabel"> 
+                    Uptime
+                </div>
+
+                <div class="sysData" x-text="uptime"></div>
+            </div>
+
+            <div class="sysItem">
+                <div class="sysLabel"> 
+                    Memory
+                </div>
+
+                <div class="sysData">
+                    <div class="progress">
+                        <span class="value" x-text="memory.text"></span>
+                        <div class="bar" :style="{width: memory.width, background: memory.color}">
+                            <span class="value" x-text="memory.text"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sysItem">
+                <div class="sysLabel"> 
+                    CPU
+                </div>
+
+                <div class="sysData">
+                    <div class="progress">
+                        <span class="value" x-text="cpu.text"></span>
+                        <div class="bar" :style="{width: cpu.width, background: cpu.color}">
+                            <span class="value" x-text="cpu.text"></span>
+                        </div>
+                    </div>
+
+                    <template x-for="core in cpu.cores" :key="core.key">
+                        <div class="core">
+                            <div class="key" x-text="core.key"></div>
+
+                            <div class="progress">
+                                <span class="value" x-text="core.text"></span>
+                                <div class="bar" :style="{width: core.width, background: core.color}">
+                                    <span class="value" x-text="core.text"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="sysItem">
+                <div class="sysLabel"> 
+                    Mounts
+                </div>
+
+                <div class="sysData">
+                    <template x-for="mount in mounts" :key="mount.key">
+                        <div class="mnt">
+                            <div class="key" :key="mount.key"></div>
+
+                            <div class="progress">
+                                <span class="value" x-text="mount.text"></span>
+                                <div class="bar" :style="{width: mount.width, background: mount.color}">
+                                    <span class="value" x-text="mount.text"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                </div>
+            </div>
+
+            <div class="sysItem">
+                <div class="sysLabel"> 
+                    Network
+                </div>
+
+                <div class="sysData">
+                    <template x-for="intf in network" :key="intf.key">
+                        <div class="intf">
+                            <strong x-text="intf.key"></strong>
+                            <div x-text="intf.tx">Tx: 0 bps</div>
+                            <div x-text="intf.rx">Rx: 0 bps</div>
+                        </div>
+                    </template>
+                </div>
+            </div>
+
+            <div class="clearfix"></div>
+        </div>
+    </div>
+</div>
+
+<script type="module">
+    import ResourceMonitor from '/assets/js/resource-monitor.js';
+    ResourceMonitor();
+</script>

@@ -1,11 +1,5 @@
 {{ define "resource" }}
-    <div id="resource-monitor">
-        <div class="data"></div>
-    </div>
-    <script type="module">
-        import ResourceMonitor from '/assets/js/resource-monitor.js';
-        new ResourceMonitor("#resource-monitor");
-    </script>
+    {{ include "components/resource-monitor" }}
 {{ end }}
 
 {{ define "content" }}
