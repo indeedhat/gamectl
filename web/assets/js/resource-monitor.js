@@ -6,7 +6,7 @@ import { fileSize, trafficSpeed, duration, once, loadCss, percentage } from '/as
  * @async
  */
 const createResourceMonitor = async () => {
-    importCss();
+    once("resource-monitor", () => loadCss('/assets/css/resource-monitor.css'));
 
     window.addEventListener("alpine:init", function() {
         Alpine.data("resourceMonitor", () => ({
@@ -21,23 +21,15 @@ const createResourceMonitor = async () => {
                 new StreamHandler(this);
             }
         }));
-
     });
-};
-
-const importCss = () => {
-    once(
-        "resource-monitor", 
-        () => loadCss('/assets/css/resource-monitor.css')
-    );
 };
 
 class StreamHandler
 {
     constructor(monitorData)
     {
-        this.stream = null;
         this.monitor = monitorData;
+        this.stream  = null;
 
         this.setupEventSource();
 
@@ -59,10 +51,10 @@ class StreamHandler
         let { uptime, memory, cpu, network, mount } = JSON.parse(data);
 
         this.monitor.loading = false;
-        this.monitor.uptime = duration(uptime);
-        this.monitor.cpu = buildCpu(cpu);
-        this.monitor.memory = buildMemory(memory);
-        this.monitor.mounts = buildMounts(mount);
+        this.monitor.uptime  = duration(uptime);
+        this.monitor.cpu     = buildCpu(cpu);
+        this.monitor.memory  = buildMemory(memory);
+        this.monitor.mounts  = buildMounts(mount);
         this.monitor.network = buildNetwork(network);
     }
 }
@@ -80,16 +72,14 @@ const buildCpu = cpu => {
 
         cores.push({
             key,
-            text: corePercent,
-            width: corePercent,
+            percent: corePercent,
             color: `rgb(${cpuTemp(corePercent)})`
         });
     }
 
     let cpuPercent = percentage(cpuTotal, cpuTotal - cpuIdle);
     return {
-        text: cpuPercent,
-        width: cpuPercent,
+        percent: cpuPercent,
         color: `rgb(${cpuTemp(cpuPercent)})`,
         cores
     };
@@ -105,26 +95,22 @@ const buildMemory = memory => {
     };
 }
 
-const buildMounts = mount => {
-    return mount.map((mnt, key) => {
-        let mountPercent = percentage(mnt.total, mnt.used);
+const buildMounts = mount => mount.map((mnt, key) => {
+    let mountPercent = percentage(mnt.total, mnt.used);
 
-        return {
-            key,
-            text: `${fileSize(mnt.used)} / ${fileSize(mnt.total)}`,
-            width: mountPercent,
-            color: `rgb(${cpuTemp(mountPercent)})`
-        };
-    });
-};
-
-const buildNetwork = network => {
-    return network.map((intf, key) => ({
+    return {
         key,
-        tx: trafficSpeed(intf.tx),
-        rx: trafficSpeed(intf.rx)
-    }));
-};
+        text: `${fileSize(mnt.used)} / ${fileSize(mnt.total)}`,
+        width: mountPercent,
+        color: `rgb(${cpuTemp(mountPercent)})`
+    };
+});
+
+const buildNetwork = network => network.map((intf, key) => ({
+    key,
+    tx: trafficSpeed(intf.tx),
+    rx: trafficSpeed(intf.rx)
+}));
 
 
 const sortCores = cpu => {
