@@ -22,9 +22,9 @@
 
                 <div class="sysData">
                     <div class="progress">
-                        <span class="value" x-text="memory.percent"></span>
-                        <div class="bar" :style="{width: memory.percent, background: memory.color}">
-                            <span class="value" x-text="memory.percent"></span>
+                        <span class="value" x-text="memory.text"></span>
+                        <div class="bar" :style="{width: memory.width, background: memory.color}">
+                            <span class="value" x-text="memory.text"></span>
                         </div>
                     </div>
                 </div>
@@ -102,6 +102,6 @@
 </div>
 
 <script type="module">
-    import ResourceMonitor from '/assets/js/resource-monitor.js';
+    import ResourceMonitor from '/assets/js/components/resource-monitor.js';
     ResourceMonitor();
 </script>

@@ -42,7 +42,7 @@ class StreamHandler
     {
         this.stream = new EventSource("/api/performance");
 
-        this.stream.onerror = e => console.error("Resource Monitor:", e);
+        this.stream.onerror = e => console.error("Resource Monitor:", e, this.monitor);
         this.stream.addEventListener("message", this.handleMessage.bind(this));
     }
 
@@ -54,8 +54,8 @@ class StreamHandler
         this.monitor.uptime  = duration(uptime);
         this.monitor.cpu     = buildCpu(cpu);
         this.monitor.memory  = buildMemory(memory);
-        this.monitor.mounts  = buildMounts(mount);
-        this.monitor.network = buildNetwork(network);
+        this.monitor.mounts  = buildMounts(Object.entries(mount));
+        this.monitor.network = buildNetwork(Object.entries(network));
     }
 }
 
@@ -95,7 +95,7 @@ const buildMemory = memory => {
     };
 }
 
-const buildMounts = mount => mount.map((mnt, key) => {
+const buildMounts = mount => mount.map(([ key, mnt ]) => {
     let mountPercent = percentage(mnt.total, mnt.used);
 
     return {
@@ -106,7 +106,7 @@ const buildMounts = mount => mount.map((mnt, key) => {
     };
 });
 
-const buildNetwork = network => network.map((intf, key) => ({
+const buildNetwork = network => network.map(([ key, intf ]) => ({
     key,
     tx: trafficSpeed(intf.tx),
     rx: trafficSpeed(intf.rx)
