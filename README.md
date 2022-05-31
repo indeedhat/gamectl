@@ -15,14 +15,6 @@ The webui will be available at localhost:8080
 - [ ] game server requirements config
     - i want to allow game server configs to be able to define the resources
       they require, that way gctl can make decisions on if multiple can run at once
-- [ ] maybe add some unit testing
-- [ ] docker support
-    - running this in docker would be a pain as it would require a companion app to run on the host to trigger
-      the scripts, it is possible and i may look into it
-    - [ ] companion app
-    - [ ] implement into web app
-    - [ ] docker file
-    - [ ] docker-compose config
 - [ ] Cron tasks
     - [ ] restart server
     - [ ] backup server
