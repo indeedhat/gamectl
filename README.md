@@ -15,11 +15,11 @@ The webui will be available at localhost:8080
 - [ ] game server requirements config
     - i want to allow game server configs to be able to define the resources
       they require, that way gctl can make decisions on if multiple can run at once
-- [ ] Cron tasks
-    - [ ] restart server
-    - [ ] backup server
 - [ ] interactive server shell
 - [ ] new server wizzard
+- [x] Cron tasks
+    - [x] restart server
+    - [x] backup server
 - [x] implement start/stop restart in frontend
 - [x] implement status in frontend
 - [x] world backups
