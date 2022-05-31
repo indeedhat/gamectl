@@ -26,7 +26,7 @@
                 <div class="data">
                     <div class="progress">
                         <span class="value" x-text="memory.text"></span>
-                        <div class="bar" :style="{width: memory.width, background: memory.color}">
+                        <div class="progress-bar" :style="{width: memory.width, background: memory.color}">
                             <span class="value" x-text="memory.text"></span>
                         </div>
                     </div>
@@ -41,7 +41,7 @@
                 <div class="data">
                     <div class="progress">
                         <span class="value" x-text="cpu.percent"></span>
-                        <div class="bar" :style="{width: cpu.percent, background: cpu.color}">
+                        <div class="progress-bar" :style="{width: cpu.percent, background: cpu.color}">
                             <span class="value" x-text="cpu.percent"></span>
                         </div>
                     </div>
@@ -73,7 +73,7 @@
 
                             <div class="progress">
                                 <span class="value" x-text="mount.text"></span>
-                                <div class="bar" :style="{width: mount.width, background: mount.color}">
+                                <div class="progress-bar" :style="{width: mount.width, background: mount.color}">
                                     <span class="value" x-text="mount.text"></span>
                                 </div>
                             </div>

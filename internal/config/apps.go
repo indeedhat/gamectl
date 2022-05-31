@@ -62,10 +62,10 @@ type App struct {
 }
 
 // Start the application
-func (app App) Start() error {
-	_, err := runCommand(app.Commands.Start)
+func (app App) Start() (string, error) {
+	output, err := runCommand(app.Commands.Start)
 
-	return err
+	return string(output), err
 }
 
 // Stop the application

@@ -22,12 +22,16 @@ func StartAppController(ctx *gin.Context) {
 		return
 	}
 
-	if err := app.Start(); err != nil {
+	output, err := app.Start()
+	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, jsonSuccess)
+	ctx.JSON(http.StatusOK, gin.H{
+		"outcome": true,
+		"output":  output,
+	})
 }
 
 // StopAppController will attempt to stop an applicaton on the server
@@ -63,12 +67,16 @@ func RestartAppController(ctx *gin.Context) {
 	// TODO: Dont really care about the stop for testing, this will need to be rectified once MVP is done
 	_ = app.Stop()
 
-	if err := app.Start(); err != nil {
+	output, err := app.Start()
+	if err != nil {
 		ctx.AbortWithError(http.StatusInternalServerError, err)
 		return
 	}
 
-	ctx.JSON(http.StatusOK, jsonSuccess)
+	ctx.JSON(http.StatusOK, gin.H{
+		"outcome": true,
+		"output":  output,
+	})
 }
 
 // GetAppStatusController will run the app status controller and return its json
