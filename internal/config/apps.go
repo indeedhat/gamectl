@@ -7,7 +7,6 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
-	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -227,7 +226,6 @@ func ReloadAppConfig() error {
 	}
 
 	appCache = appConfig
-	log.Print(appCache)
 	return nil
 }
 

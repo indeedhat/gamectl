@@ -19,6 +19,7 @@ The webui will be available at localhost:8080
     - [ ] restart server
     - [ ] backup server
 - [ ] interactive server shell
+- [ ] new server wizzard
 - [x] implement start/stop restart in frontend
 - [x] implement status in frontend
 - [x] world backups

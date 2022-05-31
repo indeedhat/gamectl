@@ -1,13 +1,14 @@
 package main
 
 import (
+	"flag"
 	"log"
-	"os"
 
+	"github.com/indeedhat/gamectl/internal/cli"
+	"github.com/indeedhat/gamectl/internal/cli/server"
 	"github.com/indeedhat/gamectl/internal/config"
+	"github.com/indeedhat/gamectl/internal/juniper"
 	"github.com/indeedhat/gamectl/internal/models"
-	"github.com/indeedhat/gamectl/internal/performance"
-	"github.com/indeedhat/gamectl/internal/router"
 )
 
 func main() {
@@ -27,13 +28,30 @@ func main() {
 		log.Fatalf("Failed to load app config: %s", err)
 	}
 
-	if monitor := performance.GetMonitor(); monitor == nil {
-		log.Fatal("Failed to initialize performance monitor")
-	}
+	cli.GenerateRegister(models.DB)
+	commandKey := flag.String("cmd", server.ServerKey, "Command to run")
+	flag.Usage = juniper.CliUsage(
+		"Dungeon Crawler Server",
+		"Server env for the dungeon crawler game",
+		"server",
+		cli.CommandRegister,
+	)
+	flag.Parse()
 
-	router := router.BuildRoutes()
+	switch *commandKey {
+	case "":
+		tmp := server.ServerKey
+		commandKey = &tmp
+		fallthrough
 
-	if err := router.Run(os.Getenv("GIN_PORT")); err != nil {
-		log.Fatalf("Run failed: %s", err)
+	default:
+		command := cli.CommandRegister.Find(*commandKey)
+		if command == nil {
+			panic("Command not found")
+		}
+
+		if err := command.Run(flag.Args()); err != nil {
+			log.Fatalf("%s", err)
+		}
 	}
 }

@@ -1,0 +1,9 @@
+- command: apps:restart
+  schedule: 10 5 1,2,3,4,5 * *
+  args:
+    - minecraft11812
+- command: apps:backup
+  schedule: 10 5 0 * *
+  args:
+    - minecraft11812
+    - /var/backup/
