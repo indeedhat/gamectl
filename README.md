@@ -1,4 +1,4 @@
-# Command Center
+# GameCTL
 Control game servers from web ui
 
 ## Requirements
@@ -7,22 +7,26 @@ cmake
 
 ## Run the project
 ```shell
-make run
+make build run
 ```
-The webui will  be available at localhost:8080
+The webui will be available at localhost:8080
 
 ## TODO
 - [ ] game server requirements config
     - i want to allow game server configs to be able to define the resources
-      they require, that way cc can make decisions on if multiple can run at once
+      they require, that way gctl can make decisions on if multiple can run at once
 - [ ] maybe add some unit testing
 - [ ] docker support
-    - running this in docker would be a pain as it would require a companion app to run on the host to trigger\
+    - running this in docker would be a pain as it would require a companion app to run on the host to trigger
       the scripts, it is possible and i may look into it
     - [ ] companion app
     - [ ] implement into web app
     - [ ] docker file
     - [ ] docker-compose config
+- [ ] Cron tasks
+    - [ ] restart server
+    - [ ] backup server
+- [ ] interactive server shell
 - [x] implement start/stop restart in frontend
 - [x] implement status in frontend
 - [x] world backups
@@ -37,10 +41,12 @@ The webui will  be available at localhost:8080
 
 
 ## Directory structure
-- **.temp/** used for creating temp files during world download process
-- **app/** this is where the backend logic exists
-- **assets/** this is where all the public available assets exist (css, js, images etc.)
-- **config/** this is where the yaml files for setting up the game servers live
-- **views/** this is where the template files exist (they need to be .tmpl files currently but i can change that to .html if you prefer)
-- **.env** the contents of this file get loaded as environment variables on boot
+- **.temp/** used for creating temp files during world download process  
+- **.config/** this is where the yaml files for setting up the game servers live  
+- **cmd/** this is where the main function for the binary lives
+- **configs/** example crap for congfigs  
+- **internal/** this is where the backend logic exists  
+- **web/assets/** this is where all the public available assets exist (css, js, images etc.)  
+- **web/views/** this is where the template files exist (they need to be .tmpl files currently but i can change that to .html if you prefer)  
+- **.env** the contents of this file get loaded as environment variables on boot 
 
