@@ -13,7 +13,7 @@
 }
 
 .block-list .block-entry:hover {
-    border-color: white;
+    border-color: gray;
 }
 
 .config-loading,

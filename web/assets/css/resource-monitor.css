@@ -1,14 +1,27 @@
-#resource-monitor .data {
-    padding: 10px;
-    border: 2px solid black;
-    background: black;
+#resource-monitor {
+    margin: 20px;
+    color: black;
 }
 
-#resource-monitor .data td,
-#resource-monitor .data th {
-    background-color: white;
-    padding: 4px;
-    margin: 4px;
+#resource-monitor div.item {
+    width:100%;
+    float:left;
+}
+
+#resource-monitor div.label {
+    width:10%;
+    float:left;
+    height:auto;
+    text-align: center;
+
+}
+
+#resource-monitor div.data {
+    width:90%;
+    float:left;
+}
+#resource-monitor .data {
+    padding: 10px;
 }
 
 #resource-monitor .core {
@@ -53,10 +66,11 @@
     margin: 2px;
     height: 24px;
 
-    font-weight: bold;
+    font-weight: bold !important;
+    color:black;
 }
 
-#resource-monitor .progress .bar {
+#resource-monitor .progress .progress-bar {
     position: absolute;
     top:0;
     bottom:0;
@@ -66,7 +80,7 @@
     overflow: hidden;
 }
 
-#resource-monitor .progress .bar .value {
+#resource-monitor .progress .progress-bar .value {
     color: black;
 }
 

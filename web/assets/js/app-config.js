@@ -16,13 +16,13 @@ class AppConfigController
 
         this.logSource = null;
 
-        this.$app = document.querySelector(`.serverStatus[data-key=${appKey}]`);
+        this.$app = document.querySelector(`.server[data-key=${appKey}]`);
         if (!this.$app) {
             return;
         }
 
-        this.$configButton = this.$app.querySelector(".controller.config");
-        this.$logButton = this.$app.querySelector(".controller.logs");
+        this.$configButton = this.$app.querySelector(".config");
+        this.$logButton = this.$app.querySelector(".logs");
 
         this._setupConfig();
         this._setupLogs()
@@ -326,7 +326,7 @@ const configModalTemplate = (appKey, configFiles) =>  `
 
         <div class="config-list">
             <h2>Server Configuration Files</h2>
-            <div class="error">
+            <div class="alert-error">
                 If you dont know what your doing please leave well enough alone
                 <br />
                 <br />
@@ -339,7 +339,7 @@ const configModalTemplate = (appKey, configFiles) =>  `
         </div>
 
         <div class="config-form">
-            <a href="javascript: void(0);" class="back">&lt; Back</a>
+            <a href="javascript: void(0);" class="btn btn-secondary back">&lt; Back</a>
             <h2></h2>
             <form method="post" class="full-width">
                 <div class="error"></div>
@@ -378,7 +378,7 @@ const logsModalTemplate = (appKey, logFiles) =>  `
         </div>
 
         <div class="log-wrapper">
-            <a href="javascript: void(0);" class="back">&lt; Back</a>
+            <a href="javascript: void(0);" class="btn btn-secondary back">&lt; Back</a>
             <h2></h2>
             <pre class="logs"></pre>
         </div>

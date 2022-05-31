@@ -1,5 +1,8 @@
-<div id="resource-monitor" x-data="resourceMonitor">
-    <div class="data">
+<div class="card" id="resource-monitor" x-data="resourceMonitor">
+    <div class="card-header">
+        System Monitor
+    </div>
+    <div class="card-body data">
         <table x-show="loading">
             <tr>
                 <td>Loading System Resources...</td>
@@ -7,20 +10,20 @@
         </table>
 
         <div class="sysStatus" x-show="!loading" style="display:none">
-            <div class="sysItem">
-                <div class="sysLabel"> 
+            <div class="item">
+                <div class="label"> 
                     Uptime
                 </div>
 
-                <div class="sysData" x-text="uptime"></div>
+                <div class="data" x-text="uptime"></div>
             </div>
 
-            <div class="sysItem">
-                <div class="sysLabel"> 
+            <div class="item">
+                <div class="label"> 
                     Memory
                 </div>
 
-                <div class="sysData">
+                <div class="data">
                     <div class="progress">
                         <span class="value" x-text="memory.text"></span>
                         <div class="bar" :style="{width: memory.width, background: memory.color}">
@@ -30,12 +33,12 @@
                 </div>
             </div>
 
-            <div class="sysItem">
-                <div class="sysLabel"> 
+            <div class="item">
+                <div class="label"> 
                     CPU
                 </div>
 
-                <div class="sysData">
+                <div class="data">
                     <div class="progress">
                         <span class="value" x-text="cpu.percent"></span>
                         <div class="bar" :style="{width: cpu.percent, background: cpu.color}">
@@ -49,7 +52,7 @@
 
                             <div class="progress">
                                 <span class="value" x-text="core.percent"></span>
-                                <div class="bar" :style="{width: core.percent, background: core.color}">
+                                <div class="progress-bar" :style="{width: core.percent, background: core.color}">
                                     <span class="value" x-text="core.percent"></span>
                                 </div>
                             </div>
@@ -58,12 +61,12 @@
                 </div>
             </div>
 
-            <div class="sysItem" x-show="mounts.length">
-                <div class="sysLabel"> 
+            <div class="item" x-show="mounts.length">
+                <div class="label"> 
                     Mounts
                 </div>
 
-                <div class="sysData">
+                <div class="data">
                     <template x-for="mount in mounts" :key="mount.key">
                         <div class="mnt">
                             <div class="key" :key="mount.key"></div>
@@ -80,12 +83,12 @@
                 </div>
             </div>
 
-            <div class="sysItem" x-show="network.length">
-                <div class="sysLabel"> 
+            <div class="item" x-show="network.length">
+                <div class="label"> 
                     Network
                 </div>
 
-                <div class="sysData">
+                <div class="data">
                     <template x-for="intf in network" :key="intf.key">
                         <div class="intf">
                             <strong x-text="intf.key"></strong>

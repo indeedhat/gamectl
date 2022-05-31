@@ -19,13 +19,8 @@ const confirm = async (title, body) => {
             content: _confirmTemplate(body),
             onClose: () => outcome ? accept() : reject(),
             onOpen: () => {
-                const $form = modal.$body.querySelector("form");
                 const $confirm = modal.$body.querySelector("button.prompt-confirm");
                 const $cancel = modal.$body.querySelector("button.prompt-cancel");
-
-                $form.onsubmit = e => {
-                    e.preventDefault();
-                };
 
                 $confirm.onclick = e => {
                     e.preventDefault();
@@ -49,12 +44,11 @@ const confirm = async (title, body) => {
 const _confirmTemplate = body => {
     return `
         <div>${body}</div>
-        <form>
-            <div class="group">
-                <button class="prompt-confirm">Confirm</button>
-                <button class="prompt-cancel">Cancel</button>
-            </div>
-        </form>
+        <div class="modal-footer">
+            <button class="btn btn-secondary prompt-confirm">Confirm</button>
+            &nbsp;
+            <button class="btn btn-outline-secondary prompt-cancel">Cancel</button>
+        </div>
     `;
 };
 

@@ -8,14 +8,14 @@ class AppControls
     {
         this.appKey  = appKey;
 
-        this.$app = document.querySelector(`.serverStatus[data-key=${appKey}]`);
+        this.$app = document.querySelector(`.server[data-key=${appKey}]`);
         if (!this.$app) {
             return;
         }
 
-        this.$startStopButton = this.$app.querySelector(".controller.startStop");
-        this.$restartButton   = this.$app.querySelector(".controller.restart");
-        this.$downloadButton  = this.$app.querySelector(".controller.download");
+        this.$startStopButton = this.$app.querySelector(".startStop");
+        this.$restartButton   = this.$app.querySelector(".restart");
+        this.$downloadButton  = this.$app.querySelector(".download");
 
         this.$status     = this.$app.querySelector(".dataTile .status");
         this.$players    = this.$app.querySelector(".dataTile .players .current");

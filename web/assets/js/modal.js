@@ -74,9 +74,12 @@ class Modal
             document.body.append(...html`
                 <div id="modal-wrapper">
                     <div id="modal-cover"></div>
-                    <div id="modal">
-                        <div id="modal-title">&gt;<span></span></div>
-                        <div id="modal-body"></div>
+                    <div id="modal" class="card">
+                        <div id="modal-title" class="card-header">
+                            <span></span>
+                            <button type="button" class="btn-close" aria-label="Close"></button>
+                        </div>
+                        <div id="modal-body" class="card-body"></div>
                     </div>
                 </div>
             `);
@@ -87,6 +90,7 @@ class Modal
     _setupBinds()
     {
         this.$cover.onclick = this.close.bind(this);
+        this.$close.onclick = this.close.bind(this);
     }
 
     _watchElements()
@@ -96,6 +100,7 @@ class Modal
         this.$modal = document.getElementById("modal");
         this.$title = document.querySelector("#modal-title span");
         this.$body = document.getElementById("modal-body");
+        this.$close = this.$modal.querySelector("#modal-title .btn-close");
 
         if (this.config.contentSelector) {
             this.$contentTemplate = document.querySelector(this.config.contentSelector);

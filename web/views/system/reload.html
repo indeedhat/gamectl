@@ -1,13 +1,15 @@
 {{ define "content" }}
-
-<div class="body">
-    <div class="bodyTitle">&gt; Main Controls</div>
-    {{ if .outcome }}
-        <h1>Reloading App Config...</h1>
-    {{ else }}
-        <div class="error">Failed to reload app config</div>
-    {{ end }}
-
-    {{ end }}
+<div class="container content">
+    <div class="card">
+        <div class="card-header">System</div>
+        <div class="card-body">
+            {{ if .outcome }}
+                <h1>Reloading App Config...</h1>
+            {{ else }}
+                <div class="alert-error">Failed to reload app config</div>
+            {{ end }}
+        </div>
+    </div>
 </div>
+{{ end }}
 

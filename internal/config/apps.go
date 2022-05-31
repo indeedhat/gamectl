@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"log"
 	"os"
 	"os/exec"
 	"path"
@@ -16,7 +17,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-const ConfigDirectoryPattern = "./config/*.app.yml"
+const ConfigDirectoryPattern = "./.config/*.app.yml"
 
 var appCache map[string]App
 
@@ -226,6 +227,7 @@ func ReloadAppConfig() error {
 	}
 
 	appCache = appConfig
+	log.Print(appCache)
 	return nil
 }
 

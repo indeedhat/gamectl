@@ -3,9 +3,8 @@ package controllers
 import (
 	"net/http"
 
-	"github.com/indeedhat/gamectl/internal/models"
-
 	"github.com/gin-gonic/gin"
+	"github.com/indeedhat/gamectl/internal/models"
 )
 
 // View is a helper for more cleanly displaying vies

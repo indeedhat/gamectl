@@ -4,7 +4,7 @@ STATUS="false"
 PLAYERS=0
 UPTIME=0
 
-if [[ -f ".examples/minecraft/.mc.lock" ]]; then
+if [[ -f "configs/minecraft/.mc.lock" ]]; then
     STATUS="true"
     PLAYERS=1
     

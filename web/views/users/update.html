@@ -1,22 +1,26 @@
 {{ define "content" }}
-<div class="body">
-    <div class="bodyTitle">&gt; Update User ({{ .subject.Name }})</div>
-    <form action="" method="post">
-        {{ if .errorString }}
-            <div class="error">{{ .errorString }}</div>
-        {{ end }}
+<div class="container content">
+    <div class="card">
+        <div class="card-header">Update User ({{ .subject.Name }})</div>
+        <div class="card-body">
+            <form action="" method="post">
+                {{ if .errorString }}
+                    <div class="alert-error">{{ .errorString }}</div>
+                {{ end }}
 
-        <div class="field">
-            <label for="username">Username:</label>
-            <input name="username" id="username" value="{{ or .input.Username .subject.Name }}" />
+                <div class="mb-3">
+                    <label class="form-label" for="username">Username:</label>
+                    <input class="form-control" name="username" id="username" value="{{ or .input.Username .subject.Name }}" />
+                </div>
+                <div class="mb-3">
+                    <label class="form-label" for="passwd">Password: (optional) </label>
+                    <input class="form-control" name="passwd" id="passwd" type="password" value="" />
+                </div>
+                <div class="mb-3">
+                    <input class="btn btn-secondary" type="submit" value="Update User" />
+                </div>
+            </form>
         </div>
-        <div class="field">
-            <label for="passwd">Password: (optional) </label>
-            <input name="passwd" id="passwd" type="password" value="" />
-        </div>
-        <div class="group">
-            <input type="submit" value="Update User" />
-        </div>
-    </form>
+    </div>
 </div>
 {{ end }}
