@@ -11,6 +11,9 @@ make build run
 ```
 The webui will be available at localhost:8080
 
+## Issues
+- [ ] long polling for status sometimes breaks with a 500 error
+
 ## TODO
 - [ ] game server requirements config
     - i want to allow game server configs to be able to define the resources
