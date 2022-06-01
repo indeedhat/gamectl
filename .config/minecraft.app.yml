@@ -6,6 +6,7 @@ commands:
   start: "configs/minecraft/start.sh"
   stop: "configs/minecraft/stop.sh"
 worldDirectory: "configs/minecraft/world"
+tty: ""
 files:
   server.properties: 
     path: "configs/minecraft/config/server.properties"

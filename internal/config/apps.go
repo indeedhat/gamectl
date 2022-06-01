@@ -45,6 +45,8 @@ type App struct {
 
 	WorldDirectory string `yaml:"worldDirectory"`
 
+	Tty string
+
 	Commands struct {
 		Status string
 		Start  string
