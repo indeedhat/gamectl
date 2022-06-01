@@ -78,7 +78,8 @@ class AppTTY
             }
         };
 
-        this.socket = new WebSocket(`ws://${document.location.host}/api/apps/${this.appKey}/tty`);
+        let protocol = document.location.protocol == "https:" ? "wss" : "ws";
+        this.socket = new WebSocket(`${protocol}://${document.location.host}/ws/apps/${this.appKey}/tty`);
         this.socket.onopen = () => {
             $loading.style.display = "none";
             $wrapper.style.display = "block";
@@ -110,7 +111,14 @@ class AppTTY
                 return false;
             }
 
-            // enter
+            if (e.key.length == 1) {
+                this.socket.send(e.key);
+                return false;
+            }
+
+            // many of the more interesting characters enter,backspace dont actually display
+            // the character in e.key
+            // e.keyCode is jacked but its a better bet than sending BACKSPACE
             let code = e.keyCode;
             if (e.keyCode == 13) {
                 $input.value = "";
@@ -139,7 +147,7 @@ const modalTemplate = () =>  `
     <div class="app-tty">
         <div class="loading">Loading...</div>
         <div class="wrapper">
-<pre class="shell" style="max-height:80vh;background:#ccc"></pre>
+<pre class="shell" style="max-height:80vh;max-width:80vw;background:#ccc"></pre>
             <input class="tty-input form-input w-100" type="text" placeholder="Command Input" />
         </div>
     </div>
