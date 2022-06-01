@@ -43,8 +43,10 @@
                         <button type="button" class="btn btn-outline-secondary restart" disabled>Restart</button>
                         <button type="button" class="btn btn-outline-secondary config" disabled>Config</button>
                         <button type="button" class="btn btn-outline-secondary logs" disabled>Logs</button>
-                        <button type="button" class="btn btn-outline-secondary tty" 
-                            {{ if not $app.Tty }}disabled{{ end }}>Shell</button>
+                        {{ if $.user.Root }}
+                            <button type="button" class="btn btn-outline-secondary tty" 
+                                {{ if not $app.Tty }}disabled{{ end }}>Shell</button>
+                        {{ end }}
                         <button type="button" class="btn btn-outline-secondary download" 
                             {{ if not $app.WorldDirectory }}disabled{{ end }}>Download World</button>
                     </div>
@@ -56,11 +58,12 @@
                 import AppTTY from '/assets/js/app-tty.js';
 
                 const appKey = '{{ $key }}';
+                console.log(appKey)
 
                 new AppConfig('{{ $app.Title }}', appKey);
                 new AppControls(appKey);
                 {{ if $app.Tty }}
-                    new AppControls('{{ $app.Title }}', appKey);
+                    new AppTTY('{{ $app.Title }}', appKey);
                 {{ end }}
             </script>
 

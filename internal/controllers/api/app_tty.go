@@ -1,0 +1,120 @@
+package api
+
+import (
+	"bufio"
+	"io"
+	"log"
+	"net/http"
+	"os/exec"
+	"time"
+
+	"github.com/creack/pty"
+	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
+	"github.com/indeedhat/gamectl/internal/config"
+)
+
+const (
+	writeWait        = 10 * time.Second
+	maxMessageSize   = 8192
+	pongWait         = 60 * time.Second
+	pingPeriod       = (pongWait * 9) / 10
+	closeGracePeriod = 10 * time.Second
+)
+
+var upgrader = websocket.Upgrader{}
+
+func TtySocketController(ctx *gin.Context) {
+	appKey := ctx.Param("app_key")
+
+	app := config.GetApp(appKey)
+	if app == nil {
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
+	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
+	if err != nil {
+		log.Println("upgrade:", err)
+		return
+	}
+
+	defer ws.Close()
+
+	cmd := exec.Command(app.Tty)
+	tty, err := pty.Start(cmd)
+	if err != nil {
+		log.Println("pty:", err)
+		return
+	}
+
+	stdoutDone := make(chan struct{})
+	go writePump(ws, tty, stdoutDone)
+	go ping(ws, stdoutDone)
+
+	readPump(ws, tty)
+
+	select {
+	case <-stdoutDone:
+	case <-time.After(time.Second):
+		// A bigger bonk on the head.
+		<-stdoutDone
+	}
+}
+
+func readPump(ws *websocket.Conn, writer io.Writer) {
+	defer ws.Close()
+
+	ws.SetReadLimit(maxMessageSize)
+	ws.SetReadDeadline(time.Now().Add(pongWait))
+	ws.SetPongHandler(func(string) error { ws.SetReadDeadline(time.Now().Add(pongWait)); return nil })
+
+	for {
+		_, message, err := ws.ReadMessage()
+		if err != nil {
+			break
+		}
+
+		if _, err := writer.Write(message); err != nil {
+			break
+		}
+	}
+}
+
+func writePump(ws *websocket.Conn, reader io.Reader, done chan struct{}) {
+	scanner := bufio.NewScanner(reader)
+	for scanner.Scan() {
+		ws.SetWriteDeadline(time.Now().Add(writeWait))
+		if err := ws.WriteMessage(websocket.TextMessage, scanner.Bytes()); err != nil {
+			ws.Close()
+			break
+		}
+	}
+
+	if scanner.Err() != nil {
+		log.Println("scan:", scanner.Err())
+	}
+
+	close(done)
+
+	ws.SetWriteDeadline(time.Now().Add(writeWait))
+	ws.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
+	time.Sleep(closeGracePeriod)
+	ws.Close()
+}
+
+func ping(ws *websocket.Conn, done chan struct{}) {
+	ticker := time.NewTicker(pingPeriod)
+	defer ticker.Stop()
+
+	for {
+		select {
+		case <-ticker.C:
+			if err := ws.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(writeWait)); err != nil {
+				log.Println("ping:", err)
+			}
+		case <-done:
+			return
+		}
+	}
+}

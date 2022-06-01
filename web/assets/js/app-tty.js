@@ -16,18 +16,19 @@ class AppTTY
             return;
         }
 
-        this.$ttyButton = this.$app.querySelector(".config");
+        this.$ttyButton = this.$app.querySelector(".tty");
 
         this._setupTty();
     }
 
-    _setupLogs()
+    _setupTty()
     {
         try {
             this.$ttyButton.removeAttribute("disabled");
-            this._initializeModal();
+            this._initalizeModel();
         } catch (e) {
-            this.$logButton.setAttribute("disabled", true);
+            console.log(e)
+            this.$ttyButton.setAttribute("disabled", true);
         }
     }
 
@@ -36,7 +37,7 @@ class AppTTY
         once("appConfigCss", () => loadCss("/assets/css/app-config.css"));
     }
 
-    _initialzeLogsModal()
+    _initalizeModel()
     {
         this.modal = new Modal({
             title: `${this.appName} TTY`,
@@ -59,7 +60,7 @@ class AppTTY
     {
         let $loading = this.modal.$body.querySelector("div.loading");
         let $wrapper = this.modal.$body.querySelector("div.wrapper");
-        let $shell = $logWrapper.querySelector("pre.shell");
+        let $shell = $wrapper.querySelector("pre.shell");
         let $input = this.modal.$body.querySelector("input.tty-input");
 
         $shell.innerHTML = "";
@@ -78,10 +79,17 @@ class AppTTY
         };
 
         this.socket = new WebSocket(`ws://${document.location.host}/api/apps/${this.appKey}/tty`);
+        this.socket.onopen = () => {
+            $loading.style.display = "none";
+            $wrapper.style.display = "block";
+        };
+        this.socket.onerror = e => console.log(e);
         this.socket.onclose = () => {
+            console.log("close")
             writeLog(`<strong>Connection Closed</strong>`);
         };
         this.socket.onmessage = e => {
+            console.log("message", e)
             let messages = e.data.split('\n');
             for (let i = 0; i < messages.length; i++) {
                 writeLog(ansispan(messages[i]));
@@ -104,7 +112,7 @@ class AppTTY
 
             // enter
             let code = e.keyCode;
-            if (e.keyCode != 13) {
+            if (e.keyCode == 13) {
                 $input.value = "";
                 code = 10
             } else if (code >= 65 && code <= 90 && !e.shiftKey) {
@@ -131,8 +139,8 @@ const modalTemplate = () =>  `
     <div class="app-tty">
         <div class="loading">Loading...</div>
         <div class="wrapper">
-            <pre class="shell"></pre>
-            <input class="tty-input" type="text" />
+<pre class="shell" style="max-height:80vh;background:#ccc"></pre>
+            <input class="tty-input form-input w-100" type="text" placeholder="Command Input" />
         </div>
     </div>
 `;
@@ -142,8 +150,8 @@ const ansispan = str => {
     Object.keys(colors).forEach(function (ansi) {
         let span = '<span style="color: ' + colors[ansi] + '">';
 
-        str = str.replace(new RegExp(`\033\\[${ansi}m`, 'g'), span)
-            .replace(new RegExp(`\033\\[0;${ansi}m`, 'g'), span);
+        str = str.replace(new RegExp(`\\033\\[${ansi}m`, 'g'), span)
+            .replace(new RegExp(`\\033\\[0;${ansi}m`, 'g'), span);
     });
 
     return str.replace(/\033\[1m/g, '<b>').replace(/\033\[22m/g, '</b>')

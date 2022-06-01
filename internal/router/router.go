@@ -66,6 +66,8 @@ func BuildRoutes() *gin.Engine {
 		rootAdmin.POST("/users/create", controllers.CreateUserController)
 
 		rootAdmin.GET("/system/reload", controllers.ReloadAppConfig)
+
+		private.GET("/api/apps/:app_key/tty", api.TtySocketController)
 	}
 
 	return router
