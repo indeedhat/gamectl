@@ -4,7 +4,7 @@ clean:
 
 .PHONY: build
 build:
-	go build -o ./ ./...
+	CGOO_ENABLED=0 go build -o ./ ./...
 
 .PHONY: run
 run: build

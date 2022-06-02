@@ -12,14 +12,14 @@ make build run
 The webui will be available at localhost:8080
 
 ## Issues
-- [ ] long polling for status sometimes breaks with a 500 error
+- [x] long polling for status sometimes breaks with a 500 error
 
 ## TODO
 - [ ] game server requirements config
     - i want to allow game server configs to be able to define the resources
       they require, that way gctl can make decisions on if multiple can run at once
-- [ ] interactive server shell
 - [ ] new server wizzard
+- [x] interactive server shell
 - [x] Cron tasks
     - [x] restart server
     - [x] backup server
