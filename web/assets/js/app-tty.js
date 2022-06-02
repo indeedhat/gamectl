@@ -3,10 +3,11 @@ import { Modal } from "/assets/js/modal.js";
 
 class AppTTY 
 {
-    constructor(appName, appKey)
+    constructor(appName, appKey, lineByLine)
     {
         this._importCss();
 
+        this.lineByLine = lineByLine;
         this.socket = null;
         this.appName = appName;
         this.appKey  = appKey;
@@ -93,21 +94,32 @@ class AppTTY
             console.log("message", e)
             let messages = e.data.split('\n');
             for (let i = 0; i < messages.length; i++) {
-                writeLog(ansispan(messages[i]));
+                writeLog(stripAnsiCodes(messages[i]));
             }
         };
 
-        $input.onkeydown = e => {
-            // eat tabs
-            if (e.keyCode == 9) {
-                e.preventDefault();
-                return false;
-            }
-        };
+        if (this.lineByLine) {
+            $input.onkeydown = e => {
+                // eat tabs
+                if (e.keyCode == 9) {
+                    e.preventDefault();
+                    return false;
+                }
+            };
+        }
         $input.onkeyup = e => {
             e.preventDefault();
 
             if (!this.socket) {
+                return false;
+            }
+
+            if (this.lineByLine) {
+                if (e.keyCode == 13) {
+                    this.socket.send($input.value + '\n');
+                    $input.value = "";
+                }
+
                 return false;
             }
 
@@ -153,6 +165,7 @@ const modalTemplate = () =>  `
     </div>
 `;
 
+const stripAnsiCodes = str => str.replace(/\x1b\[[0-9;]*[mGKHF]/g, "");
 
 const ansispan = str => {
     Object.keys(colors).forEach(function (ansi) {

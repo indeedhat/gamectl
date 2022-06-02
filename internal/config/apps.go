@@ -45,7 +45,10 @@ type App struct {
 
 	WorldDirectory string `yaml:"worldDirectory"`
 
-	Tty string
+	Tty struct {
+		Command    string
+		LineByLine string `yaml:"lineByLine"`
+	}
 
 	Commands struct {
 		Status string

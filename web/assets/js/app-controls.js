@@ -16,14 +16,17 @@ class AppControls
         this.$startStopButton = this.$app.querySelector(".startStop");
         this.$restartButton   = this.$app.querySelector(".restart");
         this.$downloadButton  = this.$app.querySelector(".download");
+        this.$refresh  = this.$app.querySelector(".refresh");
 
         this.$status     = this.$app.querySelector(".dataTile .status");
         this.$players    = this.$app.querySelector(".dataTile .players .current");
         this.$maxPlayers = this.$app.querySelector(".dataTile .players .max");
         this.$uptime     = this.$app.querySelector(".dataTile .uptime");
 
+        this.$refresh.onclick = () => this.updateStatus();
+
+        this.statusTimeout = null;
         this.updateStatus();
-        setTimeout(this.updateStatus.bind(this), 30000);
 
         this._includeJsDownloader();
         this._initDownloadButton();
@@ -36,6 +39,12 @@ class AppControls
      */
     async updateStatus()
     {
+        if (this.statusTimeout) {
+            clearTimeout(this.statusTimeout);
+            this.statusTimeout = null;
+        }
+
+        this.statusTimeout = setTimeout(this.updateStatus.bind(this), 15000);
         this._handleUpdateStatus()
     }
 

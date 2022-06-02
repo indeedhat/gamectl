@@ -33,6 +33,11 @@ func TtySocketController(ctx *gin.Context) {
 		return
 	}
 
+	if app.Tty.Command == "" {
+		ctx.AbortWithStatus(http.StatusNotFound)
+		return
+	}
+
 	ws, err := upgrader.Upgrade(ctx.Writer, ctx.Request, nil)
 	if err != nil {
 		log.Println("upgrade:", err)
@@ -41,7 +46,7 @@ func TtySocketController(ctx *gin.Context) {
 
 	defer ws.Close()
 
-	cmd := exec.Command(app.Tty)
+	cmd := exec.Command(app.Tty.Command)
 	tty, err := pty.Start(cmd)
 	if err != nil {
 		log.Println("pty:", err)
@@ -51,31 +56,36 @@ func TtySocketController(ctx *gin.Context) {
 	stdoutDone := make(chan struct{})
 	go writePump(ws, tty, stdoutDone)
 	go ping(ws, stdoutDone)
-
-	readPump(ws, tty)
+	readPump(ws, tty, stdoutDone)
 
 	select {
 	case <-stdoutDone:
 	case <-time.After(time.Second):
+		log.Print("waiting for close")
 		// A bigger bonk on the head.
 		<-stdoutDone
 	}
+	log.Print("socket closed")
 }
 
-func readPump(ws *websocket.Conn, writer io.Writer) {
+func readPump(ws *websocket.Conn, writer io.Writer, done chan struct{}) {
 	defer ws.Close()
+	defer close(done)
 
 	ws.SetReadLimit(maxMessageSize)
 	ws.SetReadDeadline(time.Now().Add(pongWait))
 	ws.SetPongHandler(func(string) error { ws.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 
+	log.Print("reading from socket")
 	for {
 		_, message, err := ws.ReadMessage()
 		if err != nil {
+			log.Print(err)
 			break
 		}
 
 		if _, err := writer.Write(message); err != nil {
+			log.Print(err)
 			break
 		}
 	}
@@ -111,6 +121,9 @@ func ping(ws *websocket.Conn, done chan struct{}) {
 		select {
 		case <-ticker.C:
 			if err := ws.WriteControl(websocket.PingMessage, []byte{}, time.Now().Add(writeWait)); err != nil {
+				if err.Error() == "websocket: close sent" {
+					return
+				}
 				log.Println("ping:", err)
 			}
 		case <-done:
