@@ -159,7 +159,9 @@ const modalTemplate = () =>  `
     <div class="app-tty">
         <div class="loading">Loading...</div>
         <div class="wrapper">
-<pre class="shell" style="max-height:80vh;max-width:80vw;background:#ccc"></pre>
+            <div class="alert alert-dark" role="alert">
+                <pre class="shell" style="max-height:80vh;max-width:80vw"></pre>
+            </div>
             <input class="tty-input form-input w-100" type="text" placeholder="Command Input" />
         </div>
     </div>

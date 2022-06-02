@@ -17,9 +17,6 @@
 #resource-monitor div.data {
     flex-grow: 1;
 }
-#resource-monitor .data {
-    padding: 10px;
-}
 
 #resource-monitor .core {
     width: 25%;
@@ -61,7 +58,9 @@
     border: 1px solid white;
 
     margin: 2px;
-    height: 24px;
+    height: 32px;
+    line-height:28px;
+    vertical-align: middle;
 
     font-weight: bold !important;
     color:black;
@@ -73,8 +72,6 @@
     bottom:0;
     left:0;
     width: 0;
-
-    overflow: hidden;
 }
 
 #resource-monitor .progress .progress-bar .value {
@@ -87,6 +84,7 @@
     bottom:0;
     left:0;
 
+    color: black;
     padding: 2px 4px;
 }
 
