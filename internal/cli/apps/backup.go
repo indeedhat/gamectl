@@ -20,7 +20,7 @@ const (
 func Backup(*gorm.DB) juniper.CliCommandFunc {
 	return func(args []string) error {
 		if len(args) != 2 {
-			return errors.New("expected 2 arg  (./server -cmd apps:restart [app_slug] [save_dir])")
+			return errors.New("expected 2 arg  (./gamectl -cmd apps:restart [app_slug] [save_dir])")
 		}
 
 		if _, err := os.Stat(args[1]); err != nil {

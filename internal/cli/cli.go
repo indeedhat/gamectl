@@ -20,6 +20,21 @@ func GenerateRegister(db *gorm.DB) {
 
 		// app things
 		{
+			Key:   apps.ListKey,
+			Usage: apps.ListUsage,
+			Run:   apps.List(db),
+		},
+		{
+			Key:   apps.StartKey,
+			Usage: apps.StartUsage,
+			Run:   apps.Start(db),
+		},
+		{
+			Key:   apps.StopKey,
+			Usage: apps.StopUsage,
+			Run:   apps.Stop(db),
+		},
+		{
 			Key:   apps.RestartKey,
 			Usage: apps.RestartUsage,
 			Run:   apps.Restart(db),

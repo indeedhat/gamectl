@@ -9,14 +9,14 @@ import (
 )
 
 const (
-	RestartKey   = "apps:restart"
-	RestartUsage = "Restart an app\nThis will only restart the app if is already running"
+	StopKey   = "apps:stop"
+	StopUsage = "Stop an app"
 )
 
-func Restart(*gorm.DB) juniper.CliCommandFunc {
+func Stop(*gorm.DB) juniper.CliCommandFunc {
 	return func(args []string) error {
 		if len(args) != 1 {
-			return errors.New("expected 1 arg  (./gamectl -cmd apps:restart [app_slug])")
+			return errors.New("expected 1 arg  (./gamectl -cmd apps:stop [app_slug])")
 		}
 
 		app := config.GetApp(args[0])
@@ -24,16 +24,14 @@ func Restart(*gorm.DB) juniper.CliCommandFunc {
 			return errors.New("app not found")
 		}
 
-		if status, err := app.Status(); err != nil || !status.Online {
+		if status, err := app.Status(); err != nil {
+			return errors.New("failed to get app status")
+		} else if !status.Online {
 			return errors.New("app is not running")
 		}
 
 		if err := app.Stop(); err != nil {
 			return errors.New("failed to stop app")
-		}
-
-		if _, err := app.Start(); err != nil {
-			return errors.New("failed to restart app")
 		}
 
 		return nil
