@@ -19,6 +19,6 @@ func TriggerCronTasks(register *juniper.CliCommandEntries) juniper.CliCommandFun
 			return err
 		}
 
-		return juniper.RunCranTasks(schedule, *register)
+		return juniper.RunCronTasks(schedule, *register)
 	}
 }

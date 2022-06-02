@@ -43,7 +43,7 @@ type cmdAlias Command
 type Command struct {
 	Command    string
 	Args       []string
-	WorkingDir string
+	WorkingDir string `yaml:"workingDir"`
 	Env        []string
 }
 
@@ -296,5 +296,7 @@ func runCommand(cmd Command) ([]byte, error) {
 		return nil, err
 	}
 
-	return process.Output()
+	data, err := process.Output()
+
+	return data, err
 }

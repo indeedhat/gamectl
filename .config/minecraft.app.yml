@@ -12,12 +12,7 @@ commands:
     args: ["-X", "-S", "minecraft1182", "quit"]
     workingDir: /opt/fabric-server-1-18-2
 tty:
-  command: 
-    command: screen
-    args: ["-r", "minecraft1182"]
-    workingDir: /opt/fabric-server-1-18-2
-    env:
-      - TERM=xterm-256color
+  command: bash
   lineByLine: true
 worldDirectory: "configs/minecraft/world"
 files:
