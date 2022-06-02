@@ -1,6 +1,7 @@
 package apps
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
 
@@ -30,7 +31,8 @@ func Status(*gorm.DB) juniper.CliCommandFunc {
 			return errors.New("failed to get app status")
 		}
 
-		fmt.Print(status)
+		data, _ := json.MarshalIndent(status, "", "    ")
+		fmt.Println(string(data))
 
 		return nil
 	}

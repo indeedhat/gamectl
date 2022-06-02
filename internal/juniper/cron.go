@@ -25,7 +25,9 @@ type cronTasks struct {
 
 // shouldRun checks if the given time matches the schedule set on the task
 func (task CronTask) ShouldRun(now time.Time) bool {
-	schedule, err := cronrange.ParseString(task.Schedule)
+	// tz, _ := now.Zone()
+	schedule, err := cronrange.ParseString(fmt.Sprintf("DR=1; TZ=UTC; %s", task.Schedule))
+
 	if err != nil {
 		return false
 	}
