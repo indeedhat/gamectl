@@ -39,7 +39,7 @@
                                     <a class="nav-link active" aria-current="page" href="/users">Users</a>
                                 </li>
                                 <li class="nav-item">
-                                    <a class="nav-link active" aria-current="page" href="/system/reload">Reload</a>
+                                    <a class="nav-link active reload-config" aria-current="page" href="javascript:void(0)">Reload</a>
                                 </li>
                             {{ end }}
                             <li class="nav-item ms-auto">
@@ -52,6 +52,23 @@
                     </ul>
                 </div>
             </div>
+            {{ if .user.Root }}
+                <script type="module">
+                    import * as Prompt from '/assets/js/prompt.js';
+                    document.querySelector ("li a.reload-config").onclick = async () => {
+                        try {
+                            await Prompt.confirm(
+                                "Reload App Config?",
+                                "This will reload the app config from the yaml files on the server.<br/><br/>"
+                            );
+                        } catch (e) {
+                            return;
+                        }
+
+                        window.location = "/system/reload";
+                    };
+                </script>
+            {{ end }}
         </nav>
 
         <main>
