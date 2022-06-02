@@ -49,7 +49,6 @@ class StreamHandler
     handleMessage({ data })
     {
         let { uptime, memory, cpu, network, mount } = JSON.parse(data);
-        console.log(Object.entries(mount))
 
         this.monitor.loading = false;
         this.monitor.uptime  = duration(uptime);
