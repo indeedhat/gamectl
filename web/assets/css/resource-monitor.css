@@ -4,21 +4,18 @@
 }
 
 #resource-monitor div.item {
-    width:100%;
-    float:left;
+    display: flex;
 }
 
 #resource-monitor div.label {
+    flex-shrink: 0;
     width:10%;
-    float:left;
-    height:auto;
     text-align: center;
 
 }
 
 #resource-monitor div.data {
-    width:90%;
-    float:left;
+    flex-grow: 1;
 }
 #resource-monitor .data {
     padding: 10px;

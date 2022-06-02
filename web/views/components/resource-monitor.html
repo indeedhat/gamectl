@@ -1,105 +1,107 @@
-<div class="card" id="resource-monitor" x-data="resourceMonitor">
-    <div class="card-header">
-        System Monitor
-    </div>
-    <div class="card-body data">
-        <table x-show="loading">
-            <tr>
-                <td>Loading System Resources...</td>
-            </tr>
-        </table>
+<div class="container">
+    <div class="card" id="resource-monitor" x-data="resourceMonitor">
+        <div class="card-header">
+            System Monitor
+        </div>
+        <div class="card-body data">
+            <table x-show="loading">
+                <tr>
+                    <td>Loading System Resources...</td>
+                </tr>
+            </table>
 
-        <div class="sysStatus" x-show="!loading" style="display:none">
-            <div class="item">
-                <div class="label"> 
-                    Uptime
+            <div class="sysStatus" x-show="!loading" style="display:none">
+                <div class="item">
+                    <div class="label"> 
+                        Uptime
+                    </div>
+
+                    <div class="data" x-text="uptime"></div>
                 </div>
 
-                <div class="data" x-text="uptime"></div>
-            </div>
+                <div class="item">
+                    <div class="label"> 
+                        Memory
+                    </div>
 
-            <div class="item">
-                <div class="label"> 
-                    Memory
-                </div>
-
-                <div class="data">
-                    <div class="progress">
-                        <span class="value" x-text="memory.text"></span>
-                        <div class="progress-bar" :style="{width: memory.width, background: memory.color}">
+                    <div class="data">
+                        <div class="progress">
                             <span class="value" x-text="memory.text"></span>
+                            <div class="progress-bar" :style="{width: memory.width, background: memory.color}">
+                                <span class="value" x-text="memory.text"></span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="item">
-                <div class="label"> 
-                    CPU
-                </div>
+                <div class="item">
+                    <div class="label"> 
+                        CPU
+                    </div>
 
-                <div class="data">
-                    <div class="progress">
-                        <span class="value" x-text="cpu.percent"></span>
-                        <div class="progress-bar" :style="{width: cpu.percent, background: cpu.color}">
+                    <div class="data">
+                        <div class="progress">
                             <span class="value" x-text="cpu.percent"></span>
+                            <div class="progress-bar" :style="{width: cpu.percent, background: cpu.color}">
+                                <span class="value" x-text="cpu.percent"></span>
+                            </div>
                         </div>
+
+                        <template x-for="core in cpu.cores" :key="core.key">
+                            <div class="core">
+                                <div class="key" x-text="core.key"></div>
+
+                                <div class="progress">
+                                    <span class="value" x-text="core.percent"></span>
+                                    <div class="progress-bar" :style="{width: core.percent, background: core.color}">
+                                        <span class="value" x-text="core.percent"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="item" x-show="mounts.length">
+                    <div class="label"> 
+                        Mounts
                     </div>
 
-                    <template x-for="core in cpu.cores" :key="core.key">
-                        <div class="core">
-                            <div class="key" x-text="core.key"></div>
+                    <div class="data">
+                        <template x-for="mount in mounts" :key="mount.key">
+                            <div class="mnt">
+                                <div class="key" x-text="mount.key"></div>
 
-                            <div class="progress">
-                                <span class="value" x-text="core.percent"></span>
-                                <div class="progress-bar" :style="{width: core.percent, background: core.color}">
-                                    <span class="value" x-text="core.percent"></span>
-                                </div>
-                            </div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <div class="item" x-show="mounts.length">
-                <div class="label"> 
-                    Mounts
-                </div>
-
-                <div class="data">
-                    <template x-for="mount in mounts" :key="mount.key">
-                        <div class="mnt">
-                            <div class="key" :key="mount.key"></div>
-
-                            <div class="progress">
-                                <span class="value" x-text="mount.text"></span>
-                                <div class="progress-bar" :style="{width: mount.width, background: mount.color}">
+                                <div class="progress">
                                     <span class="value" x-text="mount.text"></span>
+                                    <div class="progress-bar" :style="{width: mount.width, background: mount.color}">
+                                        <span class="value" x-text="mount.text"></span>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </template>
+                        </template>
 
+                    </div>
                 </div>
+
+                <div class="item" x-show="network.length">
+                    <div class="label"> 
+                        Network
+                    </div>
+
+                    <div class="data">
+                        <template x-for="intf in network" :key="intf.key">
+                            <div class="intf">
+                                <strong x-text="intf.key"></strong>
+                                <div x-text="intf.tx">Tx: 0 bps</div>
+                                <div x-text="intf.rx">Rx: 0 bps</div>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
             </div>
-
-            <div class="item" x-show="network.length">
-                <div class="label"> 
-                    Network
-                </div>
-
-                <div class="data">
-                    <template x-for="intf in network" :key="intf.key">
-                        <div class="intf">
-                            <strong x-text="intf.key"></strong>
-                            <div x-text="intf.tx">Tx: 0 bps</div>
-                            <div x-text="intf.rx">Rx: 0 bps</div>
-                        </div>
-                    </template>
-                </div>
-            </div>
-
-            <div class="clearfix"></div>
         </div>
     </div>
 </div>
