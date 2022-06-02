@@ -81,3 +81,7 @@ div.appHeader .icon {
     color: red;
     font-weight: bold;
 }
+
+button:disabled {
+    background: #eee !important;
+}

@@ -5,7 +5,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os/exec"
 	"time"
 
 	"github.com/creack/pty"
@@ -33,7 +32,7 @@ func TtySocketController(ctx *gin.Context) {
 		return
 	}
 
-	if app.Tty.Command == "" {
+	if app.Tty.Command.Command == "" {
 		ctx.AbortWithStatus(http.StatusNotFound)
 		return
 	}
@@ -46,7 +45,12 @@ func TtySocketController(ctx *gin.Context) {
 
 	defer ws.Close()
 
-	cmd := exec.Command(app.Tty.Command)
+	cmd, err := app.Tty.Command.Process()
+	if err != nil {
+		log.Println("cmd:", err)
+		return
+	}
+
 	tty, err := pty.Start(cmd)
 	if err != nil {
 		log.Println("pty:", err)

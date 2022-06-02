@@ -51,7 +51,7 @@
                         <button type="button" class="btn btn-outline-secondary restart" disabled>Restart</button>
                         <button type="button" class="btn btn-outline-secondary config" disabled>Config</button>
                         <button type="button" class="btn btn-outline-secondary logs" disabled>Logs</button>
-                        {{ if and $.user.Root $app.Tty.Command }}
+                        {{ if $app.Tty.Command.Command }}
                             <button type="button" class="btn btn-outline-secondary tty" 
                                 {{ if not $app.Tty }}disabled{{ end }}>Shell</button>
                         {{ end }}
@@ -70,7 +70,7 @@
 
                 new AppConfig('{{ $app.Title }}', appKey);
                 new AppControls(appKey);
-                {{ if and $.user.Root $app.Tty.Command }}
+                {{ if and $.user.Root $app.Tty.Command.Command }}
                     new AppTTY('{{ $app.Title }}', appKey, {{ $app.Tty.LineByLine }});
                 {{ end }}
             </script>

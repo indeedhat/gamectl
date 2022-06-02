@@ -3,12 +3,23 @@ description: ""
 icon: "/assets/img/mc.png"
 commands:
   status: "configs/minecraft/status.sh"
-  start: "configs/minecraft/start.sh"
-  stop: "configs/minecraft/stop.sh"
-worldDirectory: "configs/minecraft/world"
+  start:
+    command: screen
+    args: ["-dmS", "minecraft1182", "/opt/jdk-17.0.1/bin/java", "-Xms2G", "-Xmx6G", "-jar", "fabric-server-mc.1.18.2-loader.0.14.5-launcher.0.10.2.jar", "nogui"]
+    workingDir: /opt/fabric-server-1-18-2
+  stop: 
+    command: screen
+    args: ["-X", "-S", "minecraft1182", "quit"]
+    workingDir: /opt/fabric-server-1-18-2
 tty:
-  command: "bash"
+  command: 
+    command: screen
+    args: ["-r", "minecraft1182"]
+    workingDir: /opt/fabric-server-1-18-2
+    env:
+      - TERM=xterm-256color
   lineByLine: true
+worldDirectory: "configs/minecraft/world"
 files:
   server.properties: 
     path: "configs/minecraft/config/server.properties"

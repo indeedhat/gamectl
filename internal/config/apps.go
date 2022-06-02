@@ -37,6 +37,50 @@ type AppStatus struct {
 	} `json:"extra"`
 }
 
+var _ yaml.Unmarshaler = (*Command)(nil)
+
+type cmdAlias Command
+type Command struct {
+	Command    string
+	Args       []string
+	WorkingDir string
+	Env        []string
+}
+
+// UnmarshalYAML into the Command struct inteligently
+func (cmd *Command) UnmarshalYAML(node *yaml.Node) error {
+	switch node.Kind {
+	case yaml.ScalarNode:
+		*cmd = Command{Command: node.Value}
+	case yaml.MappingNode:
+		var alias cmdAlias
+		if err := node.Decode(&alias); err != nil {
+			return err
+		}
+
+		*cmd = Command(alias)
+	}
+
+	return nil
+}
+
+func (cmd Command) Process() (*exec.Cmd, error) {
+	var err error
+
+	process := exec.Command(cmd.Command, cmd.Args...)
+	process.Env = append(process.Env, cmd.Env...)
+
+	if cmd.WorkingDir != "" {
+		process.Dir = cmd.WorkingDir
+	} else {
+		if process.Dir, err = os.Getwd(); err != nil {
+			return nil, err
+		}
+	}
+
+	return process, nil
+}
+
 // App configuration
 type App struct {
 	Title       string
@@ -46,14 +90,14 @@ type App struct {
 	WorldDirectory string `yaml:"worldDirectory"`
 
 	Tty struct {
-		Command    string
+		Command    Command
 		LineByLine string `yaml:"lineByLine"`
 	}
 
 	Commands struct {
-		Status string
-		Start  string
-		Stop   string
+		Status Command
+		Start  Command
+		Stop   Command
 	}
 
 	Files map[string]struct {
@@ -246,14 +290,11 @@ func appKey(file string) string {
 // runCommand runs a command
 // ...
 // Who knew
-func runCommand(cmdString string) ([]byte, error) {
-	var err error
-
-	cmd := exec.Command(cmdString)
-
-	if cmd.Dir, err = os.Getwd(); err != nil {
-		return []byte{}, err
+func runCommand(cmd Command) ([]byte, error) {
+	process, err := cmd.Process()
+	if err != nil {
+		return nil, err
 	}
 
-	return cmd.Output()
+	return process.Output()
 }
