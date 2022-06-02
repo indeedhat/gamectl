@@ -30,7 +30,7 @@ div.content {
 
 div.server {
     margin:10px;
-    flex-grow: 1;
+    flex: 1;
     min-width: min(400px, 100%);
 }
 
