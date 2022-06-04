@@ -4,14 +4,19 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"os"
 	"strings"
 	"sync"
 	"time"
 
 	"github.com/1set/cronrange"
 	"github.com/go-playground/validator"
+	"github.com/joho/godotenv"
+	"github.com/tetafro/godot"
 	"gopkg.in/yaml.v3"
 )
+
+const cronLogPath = "CRON_LOG"
 
 type CronTask struct {
 	Command  string   ` yaml:"command" validate:"required"`
@@ -78,10 +83,17 @@ func (ce CronErrors) Error() string {
 // RunCranTasks that have hit their trigger
 func RunCronTasks(tasks []CronTask, register CliCommandEntries) CronErrors {
 	var (
-		wg     sync.WaitGroup
-		errors = make(CronErrors)
-		now    = time.Now()
+		wg      sync.WaitGroup
+		errors  = make(CronErrors)
+		now     = time.Now()
+		cronLog *os.File
+		mux     sync.Mutex
 	)
+
+	logPath := os.Getenv(cronLogPath)
+	if logPath != "" {
+		cronLog, _ = os.OpenFile(cronLogPath, os.O_CREATE|os.O_APPEND|os.O_WRONLY, 0644)
+	}
 
 	for _, task := range tasks {
 		wg.Add(1)
@@ -99,8 +111,15 @@ func RunCronTasks(tasks []CronTask, register CliCommandEntries) CronErrors {
 				return
 			}
 
-			if err := entry.Run(task.Args); err != nil {
+			err := entry.Run(task.Args)
+			if err != nil {
 				errors[task.Command] = err
+			}
+
+			if cronLog != nil {
+				mux.Lock()
+				cronLog.WriteString(fmt.Sprintf("%s\n%v\n\n", task.Command, err))
+				mux.Unlock()
 			}
 		}(task)
 	}
