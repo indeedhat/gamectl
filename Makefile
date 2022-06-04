@@ -12,10 +12,6 @@ run: build
 
 .PONY: deploy
 deploy:
-	ssh root@mc.phpmatt.com << EOF
-	systemctl stop gamectl
-	EOF
+	ssh root@mc.phpmatt.com systemctl stop gamectl
 	rsync --update -aRz --progress gamectl web/ root@mc.phpmatt.com:/opt/gamectl/
-	ssh root@mc.phpmatt.com << EOF
-	systemctl start gamectl
-	EOF
+	ssh root@mc.phpmatt.com systemctl start gamectl

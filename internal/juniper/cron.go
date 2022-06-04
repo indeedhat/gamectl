@@ -116,7 +116,7 @@ func RunCronTasks(tasks []CronTask, register CliCommandEntries) CronErrors {
 
 			if cronLog != nil {
 				mux.Lock()
-				cronLog.WriteString(fmt.Sprintf("%s\n%v\n\n", task.Command, err))
+				cronLog.WriteString(fmt.Sprintf("[%s] %s:\n%v\n\n", time.Now(), task.Command, err))
 				mux.Unlock()
 			}
 		}(task)
