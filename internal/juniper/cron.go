@@ -11,8 +11,6 @@ import (
 
 	"github.com/1set/cronrange"
 	"github.com/go-playground/validator"
-	"github.com/joho/godotenv"
-	"github.com/tetafro/godot"
 	"gopkg.in/yaml.v3"
 )
 
