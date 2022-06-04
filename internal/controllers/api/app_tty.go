@@ -2,6 +2,7 @@ package api
 
 import (
 	"bufio"
+	"context"
 	"io"
 	"log"
 	"net/http"
@@ -25,6 +26,7 @@ var upgrader = websocket.Upgrader{}
 
 func TtySocketController(ctx *gin.Context) {
 	appKey := ctx.Param("app_key")
+	ttyCtx, cancel := context.WithCancel(context.Background())
 
 	app := config.GetApp(appKey)
 	if app == nil {
@@ -57,24 +59,17 @@ func TtySocketController(ctx *gin.Context) {
 		return
 	}
 
-	stdoutDone := make(chan struct{})
-	go writePump(ws, tty, stdoutDone)
-	go ping(ws, stdoutDone)
-	readPump(ws, tty, stdoutDone)
+	go writePump(cancel, ws, tty)
+	go ping(ttyCtx, ws)
+	readPump(cancel, ws, tty)
 
-	select {
-	case <-stdoutDone:
-	case <-time.After(time.Second):
-		log.Print("waiting for close")
-		// A bigger bonk on the head.
-		<-stdoutDone
-	}
+	<-ttyCtx.Done()
 	log.Print("socket closed")
 }
 
-func readPump(ws *websocket.Conn, writer io.Writer, done chan struct{}) {
+func readPump(cancel context.CancelFunc, ws *websocket.Conn, writer io.Writer) {
 	defer ws.Close()
-	defer close(done)
+	defer cancel()
 
 	ws.SetReadLimit(maxMessageSize)
 	ws.SetReadDeadline(time.Now().Add(pongWait))
@@ -95,7 +90,7 @@ func readPump(ws *websocket.Conn, writer io.Writer, done chan struct{}) {
 	}
 }
 
-func writePump(ws *websocket.Conn, reader io.Reader, done chan struct{}) {
+func writePump(cancel context.CancelFunc, ws *websocket.Conn, reader io.Reader) {
 	scanner := bufio.NewScanner(reader)
 	for scanner.Scan() {
 		ws.SetWriteDeadline(time.Now().Add(writeWait))
@@ -109,7 +104,7 @@ func writePump(ws *websocket.Conn, reader io.Reader, done chan struct{}) {
 		log.Println("scan:", scanner.Err())
 	}
 
-	close(done)
+	cancel()
 
 	ws.SetWriteDeadline(time.Now().Add(writeWait))
 	ws.WriteMessage(websocket.CloseMessage, websocket.FormatCloseMessage(websocket.CloseNormalClosure, ""))
@@ -117,7 +112,7 @@ func writePump(ws *websocket.Conn, reader io.Reader, done chan struct{}) {
 	ws.Close()
 }
 
-func ping(ws *websocket.Conn, done chan struct{}) {
+func ping(ctx context.Context, ws *websocket.Conn) {
 	ticker := time.NewTicker(pingPeriod)
 	defer ticker.Stop()
 
@@ -130,7 +125,7 @@ func ping(ws *websocket.Conn, done chan struct{}) {
 				}
 				log.Println("ping:", err)
 			}
-		case <-done:
+		case <-ctx.Done():
 			return
 		}
 	}
